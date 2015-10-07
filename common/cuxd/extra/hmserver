@@ -1,0 +1,84 @@
+#!/bin/tclsh
+#
+# (C) '2014 by Uwe Langhammer
+# script for enabling/disabling the Java HMServer process
+#
+# usage: hmserver 0|1
+#
+load tclrega.so
+
+set mode [lindex $argv 0]
+if {$mode != 0 && $mode != 1} {
+  puts "usage: hmserver.tcl 0|1"
+  exit 1
+}
+set startscript "/etc/init.d/S61HMServer"
+if {![file isfile $startscript]} {
+  puts "$startscript not found!"
+  exit 1
+}
+set fp [open $startscript r]
+set file_data [read $fp]
+set data [split $file_data "\n"]
+set line1 [lindex $data 0]
+close $fp
+set flag 0
+if { $mode == 0 } {
+  puts ""
+  puts "###############################################################################"
+  puts "##                                                                           ##"
+  puts "##  Nach der Deaktivierung sind unter anderem die folgenden CCU2-Funktionen  ##"
+  puts "##  nicht mehr moeglich:                                                     ##"
+  puts "##                                                                           ##"
+  puts "##   - Diagramme                                                             ##"
+  puts "##   - Gruppenfunktion (bei Heizungsthermostaten)                            ##"
+  puts "##   - Erstinitialisierung der SD-Karte                                      ##"
+  puts "##   - Geraetefirmwareupdate ueber WebUI                                     ##"
+  puts "##                                                                           ##"
+  puts "###############################################################################"
+  puts ""
+}
+if {[string range $line1 0 3] == "exit"} {
+  puts "HMServer in $startscript disabled"
+  if { $mode == 1 } {
+    puts "enable HMServer in $startscript"
+    set flag 1
+  }
+} else {
+  puts "HMServer in $startscript enabled"
+  if { $mode == 0 } {
+    puts "stop HMServer"
+    exec $startscript stop
+    puts "disable HMServer in $startscript"
+    set flag 1
+  }
+}
+if {$flag == 1} {
+  exec mount -o remount,rw /
+  puts "write $startscript"
+  set fp [open $startscript w 0755]
+  if {$mode == 1} {
+    puts -nonewline $fp [join [lreplace $data 0 0] \n]
+  } else {
+    puts $fp "exit"
+    puts -nonewline $fp $file_data
+  }
+  close $fp
+  exec mount -o remount,ro /
+  puts -nonewline "saving DOM..."
+  flush stdout
+  rega system.Save()
+  set result [exec /usr/bin/tail -1 /etc/config/homematic.regadom]
+  if {$result == "</dom>"} {
+    puts " OK!"
+  } else {
+    puts " XML error!"
+    exit 1
+  }
+  if {$mode == 1} {
+    file delete /etc/config/InterfacesList.xml
+  }
+  puts "reboot..."
+  exec /sbin/reboot
+}
+exit 0

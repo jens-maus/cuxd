@@ -1,0 +1,79 @@
+#!/bin/sh
+
+ADDON_DIR=/usr/local/addons/cuxd
+RCD_DIR=/usr/local/etc/config/rc.d
+CONFIG_DIR=/usr/local/etc/config
+
+if [ "$1" == "" ]; then
+  echo "CCU1"
+  lcdtool "installing CUxD         "
+  mount -t yaffs /dev/mtdblock3 /usr/local
+elif [ "$1" == "CCU2" ]; then
+  echo "CCU2"
+  mount -t ubifs ubi1:user /usr/local
+elif [ "$1" == "HM-RASPBERRYMATIC" ]; then
+  echo "HM-RASPBERRYMATIC"
+  mount /usr/local
+fi
+
+mkdir -p $ADDON_DIR
+chmod 755 $ADDON_DIR
+mkdir -p $RCD_DIR
+chmod 755 $RCD_DIR
+
+# remove old stuff
+rm -f $ADDON_DIR/fw.tar.gz
+rm -f $ADDON_DIR/*.ko
+rm -f $ADDON_DIR/lib*.so*
+rm -f $ADDON_DIR/*.ccc
+rm -f $ADDON_DIR/hm_addons.cfg.*
+rm -f $ADDON_DIR/cuxd_addon.cfg
+rm -f $ADDON_DIR/cuxd
+rm -f $CONFIG_DIR/addons/www/cuxd
+
+# save current configuration
+cp -af $ADDON_DIR/cuxd.ps $ADDON_DIR/cuxd.ps.old
+
+# copy platform independent addon stuff
+cp -R cuxd/* $ADDON_DIR/
+
+# copy platform dependent addon stuff
+if [ "$1" == "" ]; then
+  cp -R ccu1/cuxd/* $ADDON_DIR/
+elif [ "$1" == "CCU2" ]; then
+  cp -R ccu2/cuxd/* $ADDON_DIR/
+elif [ "$1" == "HM-RASPBERRYMATIC" ]; then
+  cp -R ccupi/cuxd/* $ADDON_DIR/
+fi
+
+# copy startup script
+cp rc.d/cuxdaemon $RCD_DIR/
+chmod +x $RCD_DIR/cuxdaemon
+
+# link to website
+ln -sf $ADDON_DIR $CONFIG_DIR/addons/www/cuxd
+
+# add menu
+./update_addon cuxd $ADDONDIR/cuxd_addon.cfg
+
+# unmount filesystem again
+umount /usr/local
+
+# sync filesystem to make sure all changes are written to disk
+sync
+
+if [ "$1" = "" ]; then
+  echo "CCU1"
+  lcdtool "completed  CUxD       "
+  lcdtool "Reboot...             "
+  lcdtool -a 0x40 -t bin 00
+  echo "x" > /dev/watchdog
+  reboot
+  while true ; do true ;  done
+elif [ "$1" = "CCU2" ]; then
+  echo "CCU2"
+  # CCU2 always reboots after Addon/Firmware Update
+elif [ "$1" = "HM-RASPBERRYMATIC" ]; then
+  echo "HM-RASPBERRYMATIC"
+  # RASPBERRYMATIC always reboots after Addon/Firmware Update
+fi

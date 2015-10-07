@@ -1,0 +1,83 @@
+#!/bin/tclsh
+#
+# (C) '2014 by Uwe Langhammer
+#
+# backup DOM
+#
+# usage: dom_backup [<backup-dir>] [<backup-file>]
+#
+load tclrega.so
+
+set files {homematic.regadom rfd rfd.conf hs485d hs485d.conf addons/www/cuxd/cuxd.ini addons/www/cuxd/cuxd.ps}
+
+set ret 1
+cd /etc/config
+set regadom "homematic.regadom"
+if [file isfile $regadom] {
+  puts -nonewline "check $regadom..."
+  flush stdout
+} else {
+  puts -nonewline "saving DOM..."
+  flush stdout
+  exec rm -f /etc/config/homematic.regadom.err
+  exec rm -f /etc/config/homematic.regadom.bak
+  rega system.Save()
+}
+set size [file size $regadom]
+if { $size > 100 } {
+  set seek [expr "$size - 7"]
+  set chan [open $regadom r]
+  seek $chan $seek
+  set dom [gets $chan]
+  close $chan
+  if { $dom == "</dom>" } {
+    puts " OK!"
+    set ret 0
+  } else {
+    puts " XML error!"
+  }
+}
+
+if { $argc > 0 } {
+  set BACKUPDIR [lindex $argv 0]
+  if { $argc > 1 } {
+    set BACKUPFILE [lindex $argv 1]
+  } else {
+    set HOSTNAME [exec hostname]
+    set iso8601_date [exec date -Iseconds]
+    regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+)$} $iso8601_date dummy year month day hour minute second zone
+    set BACKUPFILE config.$HOSTNAME-$year-$month-$day-$hour$minute.tar.gz
+  }
+
+  foreach filename $files {
+    if [file exists $filename] {
+      append files_ok " $filename"
+    }
+  }
+  set filename homematic.regadom.bak
+  if { [file isfile homematic.regadom] && [file isfile $filename] } {
+    if { [file size homematic.regadom] == [file size $filename] } {
+      if [catch { exec diff homematic.regadom $filename >/dev/null }] {
+        append files_ok " $filename"
+      }
+    } else {
+      append files_ok " $filename"
+    }
+  }
+
+  puts "backup-files:$files_ok"
+  puts -nonewline "create $BACKUPDIR/$BACKUPFILE"
+  flush stdout
+  set cmd "exec /bin/tar czf $BACKUPDIR/$BACKUPFILE$files_ok"
+  if [catch { eval $cmd } msg] {
+    puts " ERROR!"
+#    puts $errorCode
+#    puts $errorInfo
+    puts $msg
+    set ret 1
+  } else {
+    puts " OK!"
+  }
+}
+exec sync
+exit $ret

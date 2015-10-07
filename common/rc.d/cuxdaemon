@@ -1,0 +1,87 @@
+#!/bin/sh
+CUXDIR=/usr/local/addons/cuxd
+CONFIG_URL=/addons/cuxd/index.ccc
+PIDFILE=/var/run/cuxd.pid
+STARTRC=/etc/init.d/S55cuxd
+PSPID=`ps -o pid,comm | awk '{if($2=="cuxd"){print $1}}'`
+export TZ=`cat /etc/config/TZ`
+export LD_LIBRARY_PATH=/usr/local/addons/cuxd
+
+case "$1" in
+  ""|start)
+    if [ ! -h /usr/local/etc/config/addons/www/cuxd ]; then
+      ln -sf /usr/local/addons/cuxd /usr/local/etc/config/addons/www/cuxd
+    fi
+    if [ ! -h $STARTRC ]; then
+      mount -o remount,rw /
+      ln -sf /usr/local/etc/config/rc.d/cuxdaemon $STARTRC
+      mount -o remount,ro /
+    fi
+    if [ "$PSPID" = "" ]; then
+      modprobe ehci_hcd
+      chmod 0755 $CUXDIR/cuxd
+      $CUXDIR/cuxd -r$CUXDIR/ >/dev/null 2>&1
+      logger -t homematic -p user.info "started cux-daemon"
+    fi
+  ;;
+
+  stop)
+    if [ "$PSPID" != "" ]; then
+      kill -TERM $PSPID 2>/dev/null
+      sleep 1
+      kill -0 $PSPID 2>/dev/null
+      if [ $? -eq 0 ]; then
+        sleep 10
+        kill -KILL $PSPID 2>/dev/null
+      fi
+      logger -t homematic -p user.info "stopped cux-daemon"
+    fi
+  ;;
+
+  restart)
+    if [ "$PSPID" != "" ]; then
+      kill -HUP `cat $PIDFILE` 2>/dev/null
+      logger -t homematic -p user.info "stopped (restart) cux-daemon"
+      sleep 1
+      kill -0 `cat $PIDFILE` 2>/dev/null
+      if [ $? -eq 0 ]; then
+        sleep 5
+        kill -KILL `cat $PIDFILE` 2>/dev/null
+      fi
+    fi
+    chmod 0755 $CUXDIR/cuxd
+    $CUXDIR/cuxd -r$CUXDIR/ >/dev/null 2>&1
+    logger -t homematic -p user.info "started (restart) cux-daemon"
+  ;;
+
+  info)
+    VER=`/usr/local/addons/cuxd/cuxd -v`
+    echo "Info: <center><b>CUx-Daemon $VER</b><br><img src="../addons/cuxd/CUXD.PNG"></center>"
+    echo "Name: CUx-Daemon"
+    echo "Version: $VER"
+    echo "Operations: uninstall restart"
+    echo "Config-Url: $CONFIG_URL"
+    echo "Update: http://raw.githubusercontent.com/jens-maus/cuxd/master/VERSION"
+  ;;
+
+  uninstall)
+    logger -t homematic -p user.info "removing cux-daemon"
+    killall -KILL cuxd >/dev/null 2>&1 || true
+    $CUXDIR/update_addon cuxd
+    rm /usr/local/etc/config/addons/www/cuxd
+    rm -rf $CUXDIR
+    rm -f /etc/config/InterfacesList.xml
+    if [ -h $STARTRC ]; then
+      mount -o remount,rw /
+      rm -f $STARTRC
+      mount -o remount,ro /
+    fi
+  ;;
+
+  *)
+    echo "Usage: $0 {start|stop|restart|uninstall}" >&2
+    exit 1
+  ;;
+esac
+
+exit 0

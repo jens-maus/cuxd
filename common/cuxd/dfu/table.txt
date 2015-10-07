@@ -1,0 +1,10 @@
+#
+# translation table for dfu-programmer firmware
+#
+AT90USB162=at90usb162
+AT90USB64=at90usb646
+AT90USB128=at90usb1286
+ATmega32U2=atmega32u2
+ATm32U4=atmega32u4
+ATXMEGA128A4U=atxmega128a4u
+

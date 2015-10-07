@@ -1,0 +1,53 @@
+#!/bin/tclsh
+#
+# (C) '2014 by Uwe Langhammer
+# script for creating a CCU backup file in the filesystem
+#
+# all parameters are optional!
+#
+# usage: ccu_backup [<backup-dir>] [<backup-file>]
+#
+load tclrega.so
+
+set ret 0
+set HOSTNAME [exec hostname]
+set iso8601_date [exec date -Iseconds]
+regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+)$} $iso8601_date dummy year month day hour minute second zone
+set BACKUPDIR /var/tmp
+set BACKUPFILE [set HOSTNAME]-$year-$month-$day-$hour$minute.sbk
+if { $argc > 0 } {
+  set BACKUPDIR [lindex $argv 0]
+}
+if { $argc > 1 } {
+  set BACKUPFILE [lindex $argv 1]
+}
+puts "SBK-File: [set BACKUPDIR]/[set BACKUPFILE]"
+puts ""
+puts -nonewline "saving DOM..."
+flush stdout
+exec rm -f /etc/config/homematic.regadom.err
+exec rm -f /etc/config/homematic.regadom.bak
+rega system.Save()
+set result [exec /usr/bin/tail -1 /etc/config/homematic.regadom]
+if {$result == "</dom>"} {
+  puts " OK!"
+} else {
+  puts " XML error!"
+  set ret 1
+}
+cd /
+puts "creating archive..."
+exec tar czf /tmp/usr_local.tar.gz usr/local
+cd /tmp/
+puts "sign configuration with current key..."
+exec crypttool -s -t 1 <usr_local.tar.gz >signature
+puts "store current key index..."
+exec crypttool -g -t 1 >key_index
+puts "copy firmware version..."
+file copy -force /boot/VERSION firmware_version
+puts "creating [set BACKUPDIR]/[set BACKUPFILE]"
+exec tar cf [set BACKUPDIR]/[set BACKUPFILE] usr_local.tar.gz signature firmware_version key_index
+puts "clean up temp files..."
+exec rm -f usr_local.tar.gz signature firmware_version key_index
+exec sync
+exit $ret

@@ -1,0 +1,84 @@
+<html>
+<head>
+<title>CUxD Maintenance</title>
+<base href="index.ccc" target="_blank" />
+</head>
+<script LANGUAGE="JavaScript">
+<!--
+function confirm_selection(form) {
+  var found;
+  for (var i = 0; i < form.maintenance.length; i++) {
+    if (form.maintenance[i].checked) {
+      found = form.maintenance[i];
+      break;
+    }
+  }
+  if (found) {
+    var string;
+    switch (found.value) {
+      case "1":
+        string = "CUxD-Restart";
+        break;
+      case "2":
+        string = "CUxD-Stop";
+        break;
+      case "3":
+        string = "DOM-Save";
+        break;
+      case "4":
+        string = "DOM-Save & CCU-Restart";
+        break;
+      case "5":
+        string = "CCU-Restart";
+        break;
+      case "6":
+        string = "DOM-Save & CCU-SafeMode";
+        break;
+      case "7":
+        string = "CCU-SafeMode";
+        break;
+      case "8":
+        string = "change root password";
+        break;
+      case "9":
+        string = "execute("+form.cmd.value+")";
+        break;
+    }
+    return confirm(string+"?");
+  }
+  return false;
+}
+
+function set_selection(maint,val) {
+  for (var i = 0; i < maint.length; i++) {
+    if (maint[i].value == val) {
+      maint[i].checked = true;
+    }
+  }
+}
+
+//--></script>
+<body onLoad="document.forms[0].pass.value=''">
+<h3>Service&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;<a target="_top" href="?">CUxD-Admin</a></h3>
+<a href="?file=/">File-Browser</a><br>
+<a href="?maintenance=9&cmd=ps -o ppid,pgid,pid,tty,user,vsz,stat,rss,args">Prozessliste</a><br>
+<a href="?maintenance=9&cmd=if [ ! -f  /etc/config/sshEnabled ];then touch /etc/config/sshEnabled;fi;/etc/init.d/S50sshd restart">restart SSH Dienst</a><br>
+<a href="?maintenance=9&cmd=/usr/local/addons/cuxd/extra/hmserver 0" onClick="return confirm('Java HM-Server deaktivieren!\n\n* A C H T U N G * A C H T U N G * A C H T U N G *\n\nEs werden u.a.  D E A K T I V I E R T :\n - Diagramme\n - Gruppen (bei Heizungsthermostaten)\n - Erstinitialisierung der SD-Karte\n - Gerätefirmwareupdate über WebUI\n\nCCU-Neustart wird durchgeführt!')">Java HM-Server deaktivieren (CCU-Neustart erforderlich)</a><br>
+<a href="?maintenance=9&cmd=/usr/local/addons/cuxd/extra/hmserver 1" onClick="return confirm('Java HM-Server aktivieren!\nerfordert CCU-Neustart')">Java HM-Server aktivieren (CCU-Neustart erforderlich)</a><br>
+<br>
+<b>Bitte w&auml;hlen:</b>
+<form action="index.ccc" target="_blank" onSubmit="return confirm_selection(this);">
+<input type='radio' name='maintenance' value='1' /> <a onClick="set_selection(document.forms[0].maintenance,1)">CUxD-Restart</a><br>
+<input type='radio' name='maintenance' value='2' /> <a onClick="set_selection(document.forms[0].maintenance,2)">CUxD-Stop</a><br>
+<input type='radio' name='maintenance' value='3' /> <a onClick="set_selection(document.forms[0].maintenance,3)">DOM-Save</a><br>
+<input type='radio' name='maintenance' value='4' /> <a onClick="set_selection(document.forms[0].maintenance,4)">DOM-Save &amp; CCU-Restart</a><br>
+<input type='radio' name='maintenance' value='5' /> <a onClick="set_selection(document.forms[0].maintenance,5)">CCU-Restart</a><br>
+<input type='radio' name='maintenance' value='6' /> <a onClick="set_selection(document.forms[0].maintenance,6)">DOM-Save &amp; CCU-SafeMode</a><br>
+<input type='radio' name='maintenance' value='7' /> <a onClick="set_selection(document.forms[0].maintenance,7)">CCU-SafeMode</a><br>
+<input type='radio' name='maintenance' value='8' /> <a onClick="set_selection(document.forms[0].maintenance,8);document.forms[0].pass.focus()">Set root password to <input type="password" name="pass" value="" /></a><br>
+<input type='radio' name='maintenance' value='9' /> <a onClick="set_selection(document.forms[0].maintenance,9);document.forms[0].cmd.focus()">Shell command <input type="text" size="40" name="cmd" value="" /></a><br>
+<br>
+<input type='submit' value='Ausf&uuml;hren' />
+</form>
+<body>
+</html>

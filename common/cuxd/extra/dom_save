@@ -1,0 +1,33 @@
+#!/bin/tclsh
+#
+# (C) '2014 by Uwe Langhammer
+#
+# saving DOM
+#
+# usage: dom_save
+#
+load tclrega.so
+
+set ret 1
+puts -nonewline "saving DOM..."
+flush stdout
+exec rm -f /etc/config/homematic.regadom.err
+exec rm -f /etc/config/homematic.regadom.bak
+rega system.Save()
+set regadom "/etc/config/homematic.regadom"
+set size [file size $regadom]
+if { $size > 100 } {
+  set seek [expr "$size - 7"]
+  set chan [open $regadom r]
+  seek $chan $seek
+  set dom [gets $chan]
+  close $chan
+  if { $dom == "</dom>" } {
+    puts " OK!"
+    set ret 0
+  } else {
+    puts " XML error!"
+  }
+}
+exec sync
+exit $ret

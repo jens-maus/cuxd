@@ -1,0 +1,70 @@
+#!/bin/sh
+#
+# (C) '2015 by Uwe Langhammer
+# creates and deletes a pseudo TTY mapped to a TCP port for CUxD
+#
+# usage:
+#   pty2tcp start ttyTCP<x> <ip>:<port> [<options>]
+#   pty2tcp stop ttyTCP<x>
+#
+
+SOCATP=/usr/local/addons/cuxd/extra/socat
+
+if [ \( -n "$1" \) -a \( -n "$2" \) ]
+then
+  pid=0
+  pidfile="/var/run/pty.$2.pid"
+  if [ -f $pidfile ]
+  then
+    pid=`cat $pidfile`
+#   echo "$pidfile ($pid)"
+    if [ $pid -gt 1 ]
+    then
+      kill -0 $pid 2>/dev/null
+      if [ $? -eq 1 ]
+      then
+        rm -f $pidfile
+        pid=0
+      fi
+    else
+      rm -f $pidfile
+      pid=0
+    fi
+  fi
+  case "$1" in
+    start|restart)
+      if [ -n "$3" ]
+      then
+        if [ $pid -ne 0 ]
+        then
+          echo "kill ($pid)"
+          rm -f $pidfile
+          kill -TERM $pid
+          sleep 1
+        fi
+        echo -n "starting"
+        echo $$ >$pidfile
+        ( while [ -f $pidfile ]
+          do
+            $SOCATP pty,link=/dev/$2,wait-slave tcp:$3,forever,$4 &
+            echo $! >$pidfile
+            wait
+          done
+        )&
+        echo " ok"
+      fi
+    ;;
+    stop)
+      if [ $pid -ne 0 ]                                                                             
+      then                                                                                          
+        echo "kill ($pid)"                                                                                  
+        rm -f $pidfile
+        kill -TERM $pid
+        sleep 1
+      fi                                                                                            
+    ;;
+  esac
+else
+  echo "usage: $0 (start|stop) ttyTCP<x> <ip>:<port>" 
+fi
+
