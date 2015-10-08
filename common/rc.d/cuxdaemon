@@ -61,7 +61,7 @@ case "$1" in
     echo "Version: $VER"
     echo "Operations: uninstall restart"
     echo "Config-Url: $CONFIG_URL"
-    echo "Update: http://raw.githubusercontent.com/jens-maus/cuxd/master/VERSION"
+    echo "Update: http://cuxd.de/cuxd-ccu2.php"
   ;;
 
   uninstall)
