@@ -1,5 +1,8 @@
 #!/bin/tclsh
 
+set checkURL    "https://raw.githubusercontent.com/jens-maus/cuxd/master/VERSION"
+set downloadURL "https://github.com/jens-maus/cuxd/releases"
+
 catch {
   set input $env(QUERY_STRING)
   set pairs [split $input &]
@@ -11,12 +14,14 @@ catch {
 }
 
 if { [info exists cmd ] && $cmd == "download"} {
-  if { [info exists version ] } {
-    puts "<meta http-equiv='refresh' content='0; url=https://github.com/jens-maus/cuxd/releases/tag/$version' />"
-  } else {
-    puts "<meta http-equiv='refresh' content='0; url=https://github.com/jens-maus/cuxd/releases' />"
-  }
+  puts "<meta http-equiv='refresh' content='0; url=$downloadURL' />"
 } else {
-  set version [ exec /usr/bin/wget -qO- --no-check-certificate https://raw.githubusercontent.com/jens-maus/cuxd/master/VERSION ]
-  puts $version
+  catch {
+    set newversion [ exec /usr/bin/wget -qO- --no-check-certificate $checkURL ]
+  }
+  if { [info exists newversion] } {
+    puts $newversion
+  } else {
+    puts "n/a"
+  }
 }
