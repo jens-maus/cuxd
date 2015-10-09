@@ -5,6 +5,6 @@ cp -a ccu1 tmp/
 cp -a ccu2 tmp/
 cp -a ccupi tmp/
 cd tmp
-tar -czvf ../cuxd_1.4.tar.gz *
+tar -czvf ../cuxd_$(cat ../VERSION).tar.gz *
 cd ..
 rm -rf tmp
