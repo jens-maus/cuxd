@@ -56,9 +56,6 @@ ln -sf $ADDON_DIR $CONFIG_DIR/addons/www/cuxd
 # add menu
 ./update_addon cuxd $ADDONDIR/cuxd_addon.cfg
 
-# unmount filesystem again
-umount /usr/local
-
 # sync filesystem to make sure all changes are written to disk
 sync
 
