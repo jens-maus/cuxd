@@ -1,20 +1,21 @@
 #!/bin/sh
 CUXDIR=/usr/local/addons/cuxd
 CONFIG_URL=/addons/cuxd/index.ccc
+CONFIG_DIR=/usr/local/etc/config
 PIDFILE=/var/run/cuxd.pid
 STARTRC=/etc/init.d/S55cuxd
 PSPID=`ps -o pid,comm | awk '{if($2=="cuxd"){print $1}}'`
 export TZ=`cat /etc/config/TZ`
-export LD_LIBRARY_PATH=/usr/local/addons/cuxd
+export LD_LIBRARY_PATH=$CUXDIR
 
 case "$1" in
   ""|start)
-    if [ ! -h /usr/local/etc/config/addons/www/cuxd ]; then
-      ln -sf /usr/local/addons/cuxd /usr/local/etc/config/addons/www/cuxd
+    if [ ! -h $CONFIG_DIR/addons/www/cuxd ]; then
+      ln -sf $CUXDIR $CONFIG_DIR/addons/www/cuxd
     fi
     if [ ! -h $STARTRC ]; then
       mount -o remount,rw /
-      ln -sf /usr/local/etc/config/rc.d/cuxdaemon $STARTRC
+      ln -sf $CONFIG_DIR/rc.d/cuxdaemon $STARTRC
       mount -o remount,ro /
     fi
     if [ "$PSPID" = "" ]; then
@@ -55,7 +56,7 @@ case "$1" in
   ;;
 
   info)
-    VER=`/usr/local/addons/cuxd/cuxd -v`
+    VER=`$CUXDIR/cuxd -v`
     echo "Info: <center><b>CUx-Daemon $VER</b><br><img src="../addons/cuxd/CUXD.PNG"></center>"
     echo "Name: CUx-Daemon"
     echo "Version: $VER"
@@ -68,7 +69,7 @@ case "$1" in
     logger -t homematic -p user.info "removing cux-daemon"
     killall -KILL cuxd >/dev/null 2>&1 || true
     $CUXDIR/update_addon cuxd
-    rm /usr/local/etc/config/addons/www/cuxd
+    rm $CONFIG_DIR/addons/www/cuxd
     rm -rf $CUXDIR
     rm -f /etc/config/InterfacesList.xml
     if [ -h $STARTRC ]; then

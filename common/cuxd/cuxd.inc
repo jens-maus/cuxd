@@ -60,8 +60,16 @@ CUxD-Ger&auml;te verwalten
 <form id='dtype' name='dtype' method='get' action='%s' target='doptions' style='border:0px;font-family:arial;font-size:13px;white-space:nowrap'>
 <b>CUxD&nbsp;Ger&auml;tetyp:</b>&nbsp;\
 <select name='m' size='1' style='width:50%%;' onChange='dtype2.value=0;dtype.submit();'>
-<option value='200' />
-<option value='291'>(91) CloudMatic ...</option>
+<option value='200' style='background-color:#E0E0FF'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- EnOcean -----</option>
+<option value='233'>(33) [RPS] Taster und Drehgriffkontakt</option>
+<option value='234'>(34) [1BS] T&uuml;r-/Fensterkontakt</option>
+<option value='235'>(35) [4BS] Sensoren</option>
+<option value='236'>(36) Aktoren</option>
+<option value='237'>(37) BiDi Aktoren</option>
+<option value='200' style='background-color:#E0E0FF'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- wireless M-Bus -----</option>
+<option value='225'>(25) wM-Bus Sensoren</option>
+<option value='200' style='background-color:#E0E0FF'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- Moehlenhoff -----</option>
+<option value='238'>(38) Alpha2</option>
 <option value='200' style='background-color:#E0E0FF'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- Wetter -----</option>
 <option value='232'>(32) Thermo</option>
 <option value='201'>(01) Thermo/Hygro</option>
@@ -71,15 +79,6 @@ CUxD-Ger&auml;te verwalten
 <option value='202'>(02) Schaltaktor (1-Kanal)</option>
 <option value='204'>(04) Dimmaktor (1-Kanal)</option>
 <option value='205'>(05) Relais (1-Kanal)</option>
-<option value='200' style='background-color:#E0E0FF'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- wireless M-Bus -----</option>
-<option value='225'>(25) wM-Bus Sensoren</option>
-<option value='200' style='background-color:#E0E0FF'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- EnOcean -----</option>
-<option value='233'>(33) [RPS] Taster und Drehgriffkontakt</option>
-<option value='234'>(34) [1BS] T&uuml;r-/Fensterkontakt</option>
-<option value='235'>(35) [4BS] Sensoren</option>
-<option value='236'>(36) Aktoren</option>
-<option value='237'>(37) BiDi Aktoren</option>
-|<option value='239'>(39) Relais</option>
 <option value='200' style='background-color:#E0E0FF'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- Energie -----</option>
 <option value='206'>(06) EM 1000</option>
 <option value='227'>(27) ESA 1000/2000</option>
@@ -103,6 +102,7 @@ CUxD-Ger&auml;te verwalten
 <option value='290'>(90) Universal Wrapper Device</option>
 <option value='211'>(11) RS232-F&uuml;llstandsmesser (icplan.de)</option>
 <option value='240'>(40) 16 Kanal Universalsteuerung</option>
+<option value='291'>(91) CloudMatic ...</option>
 |<option value='241'>(41) Ping / Alive 16fach</option>
 <option value='200' style='background-color:#FFC0C0'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- Experimental -----</option>
 <option value='230' style='background-color:#FFE0E0'>(30) Wetter Thermo/Hygro/Baro</option>
@@ -670,7 +670,6 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='0'$selected$>Transform</option>
 <option value='1'$selected$>State</option>
 <option value='2'$selected$>Thermostat</option>
-<option value='3'$selected$>LED16</option>
 </select><br><br>
 |
 ##48
@@ -800,4 +799,9 @@ Ger&auml;t:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 |
 <br><br>Kanal-ID:&nbsp;<input type='text' name='dcontrol' maxlength='2' size='2' value='1'>
 |
-
+##63
+|
+Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
+<option value='0'$selected$>Raumthermostat</option>
+</select><br><br>
+|
