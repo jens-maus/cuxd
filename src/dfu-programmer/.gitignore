@@ -1,0 +1,21 @@
+Makefile
+Makefile.in
+aclocal.m4
+autom4te.cache
+configure
+config.status
+config.log
+fedora/dfu-programmer.spec
+m4/compile
+src/.deps/*
+src/config.h
+src/config.h.in
+src/dfu-programmer
+src/stamp-h1
+src/*.o
+src/*.exe
+src/*.hex
+*.tar.gz
+
+# tab completion file
+dfu_programmer
