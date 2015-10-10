@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
 	   The code to retrieve the local station address is Linux specific. */
 	if (! opt_no_src_addr) {
 		struct ifreq if_hwaddr;
-		unsigned char *hwaddr = if_hwaddr.ifr_hwaddr.sa_data;
+		char *hwaddr = if_hwaddr.ifr_hwaddr.sa_data;
 
 		strcpy(if_hwaddr.ifr_name, ifname);
 		if (ioctl(s, SIOCGIFHWADDR, &if_hwaddr) < 0) {
@@ -337,7 +337,7 @@ static int get_fill(unsigned char *pkt, struct ether_addr *eaddr)
 
 static int get_wol_pw(const char *optarg)
 {
-	int passwd[6];
+	unsigned int passwd[6];
 	int byte_cnt;
 	int i;
 
@@ -345,7 +345,7 @@ static int get_wol_pw(const char *optarg)
 					  &passwd[0], &passwd[1], &passwd[2],
 					  &passwd[3], &passwd[4], &passwd[5]);
 	if (byte_cnt < 4)
-		byte_cnt = sscanf(optarg, "%d.%d.%d.%d",
+		byte_cnt = sscanf(optarg, "%u.%u.%u.%u",
 						  &passwd[0], &passwd[1], &passwd[2], &passwd[3]);
 	if (byte_cnt < 4) {
 		fprintf(stderr, "Unable to read the Wake-On-LAN password.\n");
