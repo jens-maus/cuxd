@@ -1,0 +1,69 @@
+diff -urN digitemp-3.2.0-org/userial/cnt1d.c digitemp-3.2.0/userial/cnt1d.c
+--- digitemp-3.2.0-org/userial/cnt1d.c	Thu May 22 03:50:21 2003
++++ digitemp-3.2.0/userial/cnt1d.c	Sat Oct 25 18:17:41 2003
+@@ -30,6 +30,8 @@
+ //
+ //
+ #include "ownet.h"
++#include <sys/types.h>
++typedef unsigned long ulong;
+ 
+ // external One Wire functions from nework layer
+ extern SMALLINT owAccess(int);
+diff -urN digitemp-3.2.0-org/userial/crcutil.c digitemp-3.2.0/userial/crcutil.c
+--- digitemp-3.2.0-org/userial/crcutil.c	Thu May 22 03:50:20 2003
++++ digitemp-3.2.0/userial/crcutil.c	Sat Oct 25 18:17:41 2003
+@@ -29,6 +29,7 @@
+ 
+ // Include files
+ #include "ownet.h"
++#include <sys/types.h>
+ 
+ // Local subroutines
+ void setcrc16(int,ushort);
+diff -urN digitemp-3.2.0-org/userial/ds9097/owtran.c digitemp-3.2.0/userial/ds9097/owtran.c
+--- digitemp-3.2.0-org/userial/ds9097/owtran.c	Thu May 22 03:50:19 2003
++++ digitemp-3.2.0/userial/ds9097/owtran.c	Sat Oct 25 18:17:41 2003
+@@ -34,6 +34,7 @@
+ //
+ 
+ #include "ownet.h"
++#include <sys/types.h>
+ 
+ //--------------------------------------------------------------------------
+ // The 'owBlock' transfers a block of data to and from the
+diff -urN digitemp-3.2.0-org/userial/ds9097u/owtrnu.c digitemp-3.2.0/userial/ds9097u/owtrnu.c
+--- digitemp-3.2.0-org/userial/ds9097u/owtrnu.c	Thu May 22 03:50:20 2003
++++ digitemp-3.2.0/userial/ds9097u/owtrnu.c	Sat Oct 25 18:17:41 2003
+@@ -41,6 +41,7 @@
+ 
+ #include "ownet.h"
+ #include "ds2480.h"
++#include <sys/types.h>
+ 
+ // external functions defined in owllu.c
+ extern SMALLINT owTouchReset(int);
+diff -urN digitemp-3.2.0-org/userial/ioutil.c digitemp-3.2.0/userial/ioutil.c
+--- digitemp-3.2.0-org/userial/ioutil.c	Thu May 22 03:50:21 2003
++++ digitemp-3.2.0/userial/ioutil.c	Sat Oct 25 18:17:41 2003
+@@ -37,6 +37,8 @@
+ #include <ctype.h>
+ #include "ownet.h"
+ 
++typedef unsigned long ulong;
++
+ #ifdef __MC68K__
+ #include <PalmOS.h>
+ #include <Window.h>
+diff -urN digitemp-3.2.0-org/userial/owproto.h digitemp-3.2.0/userial/owproto.h
+--- digitemp-3.2.0-org/userial/owproto.h	Thu May 22 03:50:21 2003
++++ digitemp-3.2.0/userial/owproto.h	Sat Oct 25 18:17:41 2003
+@@ -29,7 +29,7 @@
+    char *owGetErrorMsg(int);
+ #endif
+                
+-
++typedef unsigned long ulong;
+ 
+ /* From ioutil.c */
+ int EnterString(char *, char *, int, int);

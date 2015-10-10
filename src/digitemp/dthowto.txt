@@ -1,0 +1,111 @@
+
+    Howto build a Serial Adapter for Dallas DS1820 temperature sensors
+
+          Copyright (c) 2001 by Brian C. Lane <bcl@brianlane.com>
+                          All Rights Reserved
+
+
+
+  The DigiTemp program for Linux, DOS and Windows 95 uses a simple serial
+port adapter to communicate with the Dallas DS1820 digital temperature
+sensors. These sensors use a protocol called One-Wire or Micro LAN
+(depending on which Dallas documentation you are reading). This protocol
+requires only a ground and a data wire to the device. All power is derived
+from the data line while it is idle.
+
+  The protocol is NOT RS232! The adapter converts the RS232 voltages into
+the +5v needed to communicate with the DS1820. Each byte sent to the serial
+port represents one data bit to the DS1820. See Dallas Semiconductor App
+Note #74 for more information, or the sourcecode for DigiTemp.
+
+  How To build an adapter
+  -----------------------
+
+  If you want a schematic diagram you need to look at page 20 of App.
+  Note #74 from Dallas Semiconductor ( )
+
+  
+  Parts List
+  ----------
+
+  1   DB-25 connector or DB-9 connector
+  1   1.5k ohm resistor
+  2   1N5818 Schottky Diode
+  1   1N5228 3.9v Zener Diode
+  1   1N5234 6.2v Zener Diode
+  1   2 position terminal block (for connecting the sensors to adapter)
+
+  Wire cutters and a soldering iron.
+
+  In this document I will refer to the pin functions. The pin numbers for
+  DB-25 and DB-9 are as follows:
+
+  Name    DB-25    DB-9
+  ----    -----    ----
+  DTR      20       4
+  RXD      3        2
+  TXD      2        3
+  GND      1,7      5
+
+  NOTE: I have not built a DB-9 version myself. Please let me know if you
+        successfully build one or have problems with it.
+
+	On the DB-25 pins 1 and 7 must BOTH be connected together.
+
+
+  Step          Description
+  ------------------------------------------------------------------------
+   1.           Solder the 1N5228 3.9v Zener between GND and DTR with the
+                Cathode(the stripe) towards DTR.
+
+   2.           Solder the 1.5k ohm resistor between RXD and TXD.
+
+   3.           Solder one of the 1N5818 diodes between RXD and TXD with the
+		Cathode(the stripe) towards RXD.
+
+   4.           Solder the other 1N5818 diode between RXD and DTR with the
+		Cathode(the stripe) towsrds DTR.
+
+   5.           Solder the 1N5234 6.2v Zener between RXD and DTR with the
+		Cathode(the stripe) towards DTR.
+
+   6.           Solder RXD to one pin of the terminal block and paint it
+                black. This is the GND connection for the sensors.
+
+   7.           Solder DTR to the other pin of the terminal block and paint
+                it red. This is the DATA connection for the sensors.
+
+
+   There! Now you have an adapter.
+
+   Connecting the sensors
+   ----------------------
+
+   You need to connect to wires to the sensor to attach to the terminal
+block. If you look at the sensor so that the label is towards you, with the
+pins facing down the pins are from left to right:
+
+   1. GND
+   2. DATA
+   3. +5v
+
+   Solder your wires to GND and DATA and connect them to the terminal block
+and you're done! Be careful not to overheat the sensor while soldering to
+it. My method is to tin the legs quickly and let them cool off (while
+tinning the others) and then to tin the wires, then attach them quickly with
+a minimum of heat applied.
+
+  One additional note: Because of the voltage(and current) drop across the
+resistor this adapter isn't capable of providing enough current to read
+temperatures above about +70C. This is a limitation of the design, not an
+error with the DS1820 or the software.
+
+  If you have any questions or comments, email me at bcl@brianlane.com or
+subscribe to the digitemp mailing list by sending a blank email to
+digitemp-subscribe@brianlane.com
+
+   Brian Lane
+   bcl@brianlane.com
+   http://www.brianlane.com
+
+   March 13, 2001

@@ -1,0 +1,437 @@
+08/27/2008		Gathering up patches for a v3.6.0 release. Changes Include:
+				- Releasing new version with these changes:
+				- Updated to the .spec file from Fedora9
+				- DS2490 now suppresses the 'Found usb ...' output
+				- Support for compiling under DARWIN
+				- Current reading added to DS2438
+				- DS28EA00 support added
+				- Tabbed output of 0.00 on CRC errors with log type -o2 or -o3
+				- New manpage from Debian digitemp maintainer			
+
+01/01/2007      Released v3.5.0
+
+12/26/2006      Adding DS1923 Hygrosens Logger support from Tomasz Nowak
+                Moved all of the history to ChangeLog
+
+12/25/2006      Added Cygwin support
+                Fixing ambiguous error messages (eg. blank config file
+                or blank serial device).
+
+06/25/2005      Logging output for DS2438 is not consistent with the other
+                outputs. When -o2 and -o3 are used the temperatures for the
+                DS2438 devices are output.
+                The -H option can still be used to customize the DS2438
+                output when not using the -o options.
+
+02/03/2004      Broke DS9097 support with my owWriteBytePower() return code
+                check in digitemp.c in v3.3.1, so I applied the new DS9097
+                performance patch from Erik Rigtorp and changed owLevel in 
+                the ds9097 code to return the value called with to fake out
+                the higher level code.
+
+                Added FREEBSD to the typedef section of ownet.h, maybe this
+                will fix some of those problems.
+
+02/01/2004      Fixed DS2490 USB adapter support. Fixed Makefile so that it 
+                doesn't need to be edited for USB support.
+
+01/25/2004      A user reported a bug in the humidity temperature, it
+                wasn't converting negative temperatures correctly.
+                I also see a potential problem with the DS18B20 and DS1822
+		which use a short int type and depend on it being 16 bits
+		so that the sign comes out correct. But can we count on a
+		short int always being 16 bits? I need to look into it.
+
+01/10/2004	I'm trying to wrap up all the patches I've received int a new
+		release v3.3.0 with humidity and DS2438 support. Added code
+		from Eric Wilde to do humidity calculations for the 
+		AAG TAI-8540 humidity sensor.
+		
+		Adding patches for OpenBSD from Måns Nilsson.
+		
+		Changing the binary names that are generated to differentiate
+		between DS9097, DS9097U and DS2490 (usb) adapter support.
+		
+		The USB support still doesn't work right. It searches the LAN
+		ok, but needs to be root to do so, and doesn't read properly.
+		I'll deal with it in the next release I guess.
+		
+		Added lockfiles. This requires either setting the binary to
+		group lock (chmod g+s;chown .lock digitemp_*) or adding the
+		user who will be running it to the lock group.
+
+11/29/2003      Trying to get a first pass at DS2438 (A/D & Battery monitor)
+                support up and running.
+                Found a bug, init wouldn't record counters found on branches
+		of a hub.
+
+10/27/2003      Added patch from Sven Geggus to allow -n0 to make it run
+                in an infinite loop. Need to check for exit conditions
+   		and clean up logfile, serial port, etc. in a nice manner.
+
+08/13/2003      Adding DS2490 USB to 1-wire adapter support. Bumping the
+                version number to 3.3.0 without a release of 3.2.1
+
+06/14/2003      Made change to hub search from Jesús Roncero, it wouldn't
+                work right if run with -q (a owFirst was inside the
+                quiet check). Also adding the manpage created by Jesú.
+
+                Version changed to 3.2.1
+
+05/24/2003      Adding a banner that reports what library the binary was
+                compiled for (DS9097 or DS9097U).
+                Adjusted the makefile a bit, change the dist to be one of
+                dist-9097 or dist-9097u to build for the right target.
+
+05/23/2003      Adding kludges for USB to Serial adapter. Added a loop of
+                10 tries to the DS2480Detect routine. Added DEBUG_USERIAL
+                compile time wrappers for diagnostic information about the
+                ReadCOM routine. Part of the key to this is the delay used
+                in ReadCOM, its just too short for use with the USB to
+                serial adapter. I've changed it to 1 second + 10-15mS --
+                I'm not sure that the global_msec is really needed with the
+                longer timeout time, its a fail-safe anyway; the character
+                ought to come back a long time before the timeout.
+
+                Changed version to v3.2.0
+                
+02/14/2003      Adding logging of read values. Need to change the way it
+                handles building the output string.
+                It works, but the counter really needs its own format
+                string. Kinda hard to automatically integrate it into the
+                current temperature oriented format string.
+
+02/12/2003      Adding more code... Needs more work, the family code may
+                be buried in the coupler linked list. I may need to move the
+                decision as to how to read it to after it finds the coupler
+                and turns it on.
+                Change read_temp to read_sensor. device selection is common
+                to all devices, then switch based on the serial number
+                finally selected (saved as it is selected).
+
+02/06/2003      Changed version number to v3.1.0
+                Adding support for counters
+                Happy 92nd Birthday to Ronald Reagan!
+
+01/10/2003      Finally, humidity is working, thanks in large part to work
+                by Eric Wilde. Need to add logging of DS2438. I think it
+                will be hard-coded, if it needs to be in another format
+		it can be parsed with perl or python or whatever.
+		Fixed a bug that wasn't allowing %% to be embedded in the
+		format specifier.
+
+		Adding lockfile support using the lockdev library under
+		Linux. Wrapping it in LINUX checks until other systems
+		indicate that they can use it.
+
+		Lockfiles are working, but - the binary has to be sgid to
+		the lock group so that it can access /var/lock, adding
+		the user to the lock group would also accomplish this.
+
+01/08/2003      Still trying to get DS2438 and Humidity support working
+                Also changing strcpy to strncpy, dunno why they weren't
+                already using it.
+
+01/04/2003      Adding DS2438 based humidity support from Eric Wilde.
+
+11/21/2002      Changed sleep method to use less CPU cycles, thanks to
+                peter enderborg for pointing it out.
+
+11/19/2002	Reviewing massive changes from Erik Rigtorp, he has added a
+		userial compatible version of the passive adapter code. I am
+		creating a new Makefile that will work for all systems and
+		allow selection of the adapter at build time.
+
+		Thanks for this version go to Erik Rigtorp for adding the
+		userial compatible passive code. His webpage can be found
+		at http://erkki.g0ds.org/
+
+		Thanks also go out to Kevin Pedigo for his help in getting
+		the new Makefile up and running. Kevin is the current
+		President of KPLUG (www.kplug.org/~kevinp)
+
+		Improved the sleep method when reading sensors multiple
+		times so that it doesn't use 100 CPU while waiting. Thanks
+		to peter enderborg for pointing this out.
+
+		Changed version # to v3.0.0
+
+08/21/2002      Small bug with -i crept in, it wants another command to be
+                present, it won't just initalize.
+
+08/18/2002	Added %N token to allow the time in seconds since Epoch to
+		be selected in the output.
+		Added module for NetSaint/Nagios to perl directory, it is
+		named check_digitemp.pl
+		Added a MySQL logging script to perl directory, it is named
+		digitemp_mysql.pl
+		Added check for serial port permissions and nice error
+		output if the user doesn't have +rw on the selected port.
+		Removed limitation on -i being the only command. It can be
+		combined with other commands again.
+
+		Changed to v2.6
+
+08/16/2002      Adding %N token to output seconds since Epoch, which is
+                masked by my use of %s for the sensor number. I don't want
+                to remove %s, because that would break old code. So %N
+		now maps to %s in the strftime format.
+		The check for commands is too strict, it isn't allowing
+		-i to be combined with any of the other commands.
+		Added permission checking on the serial device with a clean
+		exit if the user doesn't have access to the serial device.
+
+06/23/2002      Releasing new version today. Really! Making -q turn off 
+                the extra output I added for initalizing the 1-wire lan.
+
+06/08/2002      Adding patches from John. exit() codes are now #defines
+                and .digitemprc now outputs the serial numbers as hex
+                instead of decimal. But maintains backwards compatibility
+                until a new .digitemprc is written.
+                Output format string now includes an option to output the
+                Sensor's serial number in hex (%R).
+
+06/08/2002      Made changes suggested by John Stoffel. Consisting mostly of
+                code reorganizations.
+                The one new feature is the %R format specifier for the log
+                output string which inserts the hex serial number of the
+                sensor into the output.
+                We changed the way command line arguments are processed,
+                so getopt is only called once, and added a check to make
+                sure only 1 of the action commands is specified and complain
+                otherwise.
+
+                Changed to v2.5
+
+05/11/2002      Adding more changes from John Stoffel
+
+05/08/2002      Integrating changes for Solaris, AIX, FreeBSD from John
+                Stoffel. Changes to getopt initial settings, Makefile
+                and include files.
+
+05/06/2002      Adding changes and fixes from DT v2.5 for Windows. 
+                Family code for DS1822 was wrong, it is really 0x22
+                Lots of changes to the read_temp routine, added a better
+                scratchpad dump routine (previous one only worked for
+                the DS1820).                
+                Quite a bit needs to be changed, I have switched to using
+		a structure to store the sensor and coupler lists. I
+	        updated the core temperature read routine, the lan walk
+                and device search routines. Reading when using a hub
+                is now faster when reading multiple devices on the
+                same hub segment.
+
+01/15/2002      Cleaning up, preparing for release
+
+01/15/2002      Added support for DS2409 one-wire couplers like those used in
+                Simon Atkin's hub. www.simat.enta.net
+		Converted to Dallas Semi's userial v3.00 one-wire library.
+		Version changed to v2.3
+		Added a -w command to walk the entire one-wire LAN and show all
+		device serial numbers with a descriptive family type.
+		Thanks to Ted Frohling for the loan of the one-wire Hub.
+
+01/14/2002      Adding support for reading sensors on DS2409 couplers.
+
+01/13/2002      Walking the tree now works -- after changing the swt1f.c
+                routine to use the Smart-On Main command while searching
+		for devices (otherwise it only finds the first).
+		
+		Adding support for Coupler to the main program.
+		Init now works, writing .digitemprc now works.
+		Read .digitemprc appears to work.
+		Need to add reading of specified sensors and of all
+		sensors.
+
+01/12/2002      Adding a diagnostic walk of the attached network, working
+                on DS2409 MicroLAN Coupler support.
+		Added release1WireNet calls before all exit calls.
+                Switching to the userial library v3.0.0, I seem to have
+		run into a problem with the old library and I cannot read
+		either of my DS9097U adapters with v2.2 digitemp code.
+
+05/26/2001	The 18B20 and 1822 patch didn't work. It was reading the
+   		wrong scratchpad registers. (2,1 instead of 1,0).
+		Changed version to v2.2
+
+03/16/2001	Integrating the AIX patch from Ewan Leith
+   		<ejl@man.fraser-williams.com>
+		It amounts to return value checking on getopt and changes
+		in the wirelnk.c file.
+		Adding DS1822 and DS18B20 changes from Roland Roberts
+		<roland@astrofoto.org>
+
+03/16/2001	Integrated the AIX changes
+		Integrated the DS1822 and DS18B20 patch
+		Added the patch for DS1822 and DS18B20 support.
+
+03/13/2001	Version 2.1 release
+		Added detection of a temperature glitch in the DS1820
+		Added detection of the DS18S20's 85 degree C error state
+		Added output of error conditions to stderr
+		Bad reads will now insert zeros instead of skipping the sensor
+		If a read fails it is retried 3 times before giving up on that
+		sensor. The remainder of the sensors are still attempted.
+		Added a command line option (-c) to allow the configuration
+		file to be specified.
+		Added a couple more scripts to the rrdb directory.
+
+
+03/05/2001	Adding a command line option to specify the configuration
+   		file to use. -c config_file will override the default of
+   		.digitemprc
+
+02/17/2001	If there is an error with strong pullup on/off it shouldn't
+   		abort the conversion! Just log an error to stderr.
+
+01/31/2001	Added a dummy temperature output when a sensor cannot be
+   		read. It outputs a 0 so that scripts like my grapher 
+   		don't get confused and log the wrong sensor in the wrong
+   		place.
+   		
+   		An error message is also output to stderr.
+
+01/29/2001	Oops. It seems that I missed the line in the DS1820 
+   		datasheet that says Vdd needs to be tied to GND for
+   		Parasite power to work correctly.
+   		Various curses come to mind.
+   		The DS1820 works better than the DS18S20 with Vdd floating
+   		but this probably explains the infrequent glitches I
+   		saw before adding the DS18S20s.
+
+01/15/2001	Still getting glitches.
+   		Adding a reset and delay before retry
+
+01/14/2001      Changed Version number to 2.1
+   
+   		I now have 2 DS18S20 sensors which supposedly fix the
+  		Temperature accuracy problems of the DS1820 (see the
+  		ds1820-report.pdf from Dallas). But now I get a huge
+  		number of glitches in the DS18S20's readings.
+  		The DS18S20 has an error condition, but it is +85C and
+  		the glitches I am seeing are because DigiTemp doesn't
+  		output anything at all for the DS18S20's reading.
+  		
+  		Adding a check for the DS18S20's error condition:
+  		LSB = 0xAA
+  		MSB = 0x00
+  		COUNT_REMAIN = 0x0C
+  		COUNT_PER_C = 0x10
+  		
+  		If this error case is encountered, the reading should be
+  		repeated. If it comes up again, use it.
+  		
+  		There is also a glitch possible in the DS1820 that exhibits
+  		itself by COUNT_PER_C - COUNT_REMAIN = 1, this should be
+  		checked for, and the reading repeated and the next result
+  		used.
+
+		The problem with no reading from the device seems to
+		happen when MLanAccess is called. There is no good way to
+		tell what the problem is, so I will change the code to
+		try 3 times before failing. Changes are in read_temp.
+						
+01/04/2000      Changing the default read timeout to 1000mS. I had problems
+                with it set to 500mS and a 30' sensor wire (the reading
+                was low by about 10 degrees).
+
+01/04/2000      Version 2.0 release
+                Adding support for the DS9097-U adapter for the Linux
+                version. The Solaris version will need changes to be able
+                to support the DS9097-U.
+                Changed license to GNU Public License v2.0
+                Added the -q option to make the banner disappear.
+
+01/01/2000      Well, no release last year. Adding -q to make the banner
+                dissapear for batchfiles that want to get the output
+                directly.
+
+12/28/1999      Changed Version number to 2.0
+                Adding GNU public license
+                Changing this code to use the DS9097-U adapter
+
+06/03/1999      Finishing this thing up.
+
+06/02/1999      Use 2 logging routines, log_time to log a single line
+                per sensor with optional time data and log_str to log
+                a single line for multiple sensors with elapsed time at
+                the beginning of the line.
+
+05/29/1999      Added 2 new init file tags, LOG_FORMAT and LOG_TYPE
+                New formatting works, need to clean up the logic now.
+		
+05/27/1999      Adding user specified format string. To use it, first
+                parse out the digitemp specific stuff and create a new
+                string to feed into strftime, with the sensor, temperature
+                already set.
+
+05/24/1999      Adding a output specifier string, this will allow users
+                to configure the output to look however they want it to.
+                The format string uses strftime tokens plus 3 special
+                ones for digitemp - %s for sensor #, %C for centigrade,
+                %F for fahrenheit
+
+05/23/1999      Adding Solaris support via -DSOLARIS define
+                Fixing the time problems once and for all, using localtime
+                in the log_line routine. The user should have TZ set
+                correctly for their timezone. This has been tested
+                and works correctly.
+
+                Changed version number to v1.3
+
+05/23/1999      Adding Solaris changes, donated by a user.
+                Removing libc5 binaries, I no longer have a libc5 system
+                Fixing the time problems with logging
+
+01/14/1999      A user in Sweden (and another in Finland) discovered a
+                long standing bug. In do_temp I should have been using
+                0x100 instead of 0xFF for the subtraction. This caused
+                temperatures below 0 degrees C to jump up 1 degree as
+                it decreased. This is fixed.
+   		
+                Changed version number to v1.2
+
+10/20/1998      Adding new features from DOS version to keep things
+                consistent. Removing the debug command, not used anyway.
+                Added a free() to error condition edit from read_rcfile()
+
+                Set some cases of freeing to = NULL, also freed the rom
+                list before doing a search rom (searchROM checks too, but
+                this is the right place for it).
+
+08/31/1998      Adding a check for family 0x10 so that we can read DS1820s
+                while they are on a network that includes other 1-wire
+                devices.
+                Fixed a problem with freeing uninitalized rom_list when
+                starting a SearchROM. Not sure why this never appeared
+                before.
+
+03/06/1998      Adding a -d debug level to help figure out why this thing
+                is no longer working.
+
+03/13/1997      Error in CRC calculation. Wrong # of bytes.
+                Error with 3 sensors. Sometimes doesn't store correct ROM
+                data to .digitemprc -- need to malloc more memory dummy!
+
+03/08/1997      Adding user defined timeouts for failure and for the
+                read delay.
+
+01/24/1997      Changed over to correct baud rate and 6 bits @ 115.2k
+                ROM search function is now working. All low level code
+                is functioning except for Alarm Search. Starting to move
+                into a seperate object file with API for users to write
+                their own code with.
+   		
+01/22/97        Working on ROM search routine, double cannot handle a full
+                64 bits for some reason, converting to 64 byte array for
+                each bit.
+
+01/19/1997      Rewriting for new interface. This programs handles all the
+                low level communications with the temperature sensor using
+                the 115200k serial adapter.
+   
+01/02/1996      Rewriting this code to be more user friendly
+     
+
+
+

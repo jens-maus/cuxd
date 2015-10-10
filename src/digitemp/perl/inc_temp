@@ -1,0 +1,102 @@
+#!/usr/bin/perl -w
+#
+# DigiTemp webpage include script
+# Copyright 1997-2001 by Brian C. Lane <bcl@brianlane.com> www.brianlane.com
+# All Rights Reserved
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
+#
+
+#
+# Read the temperature logfile, write an include file for the webpage.
+#
+# Sensor #0 is the Window
+# Sensor #1 is the inside of the Linux box
+#
+# Dec 18 21:46:47  Sensor 0 C: 8.81 F: 47.86
+# Dec 18 21:46:47  Sensor 1 C: 26.41 F: 79.54
+#
+
+# Directory and filename of the webpage include file to create
+$ftp_src_dir  = "/tmp/";
+$ftp_src_file = "nexus_temp.inc";
+
+# Open the file for output
+open( INCFILE, ">$ftp_src_dir$ftp_src_file") || die "Can't open $ftp_src_dir$ftp_src_file";
+
+# Write the temperatures to the file
+print INCFILE "<HR>\n";
+print INCFILE "<CENTER>\n";
+print INCFILE "The current temperatures are:<P>\n";
+
+# Run tail -2 /var/log/temperature and parse the output
+# The -2 depends on the number of sensors that you have.
+open( TEMPLOG, "tail -2 /var/log/temperature |") || die "Can't fork: $!";
+
+while( <TEMPLOG> )
+{
+  # Get the time and date, sensor number, temperature in c and f
+  ($month,$day,$time,$d1,$sensor,$d1,$centigrade,$d1,$fahrenheight) = split( " ", $_ );
+
+  # Print sensor specific messages
+  # The \xB0 is supposed to be a degree symbol. It seems to work for some
+  # systems but not for others
+  if( $sensor eq '0' )
+  {
+    print INCFILE "The modems are $fahrenheight\xB0 F ($centigrade\xB0 C)<BR>\n";
+  }
+
+  if( $sensor eq '1' )
+  {
+    print INCFILE "The room is a ";
+
+    if( $fahrenheight < 40.0 )
+    {
+      print INCFILE "Freezing";
+    }
+
+    if( $fahrenheight >= 40.0 and $fahrenheight < 70.0 )
+    {
+      print INCFILE "Chilly";
+    }
+
+    if( $fahrenheight >= 70.0 and $fahrenheight < 80.0 )
+    {
+      print INCFILE "Comfortable";
+    }
+
+    if( $fahrenheight >= 80.0 and $fahrenheight < 100.0 )
+    {
+      print INCFILE "Balmy";
+    }
+
+    if( $fahrenheight >= 100.0 )
+    {
+      print INCFILE "Blistering";
+    }
+
+
+    print INCFILE " $fahrenheight\xB0 F ($centigrade\xB0 C)<BR>\n";
+  }
+}
+
+print INCFILE "Last updated: $month $day $time<BR>\n";
+
+print INCFILE "</CENTER>\n";
+
+close( TEMPLOG );
+close( INCFILE );
+
+# done!

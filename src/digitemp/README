@@ -1,0 +1,477 @@
+----------------------------------------------------------------------------
+  DigiTemp v3.6.0 for Linux			        (c)1996-2008 by Brian C. Lane
+============================================================================
+
+  Thank you for using DigiTemp for Linux. If you have any problems or
+suggestions please feel free to contact me at bcl@brianlane.com
+
+You can get the latest information by pointing your web browser at
+http://www.digitemp.com/ and look at the Software page for the latest
+release, or use the forums to talk to other DigiTemp users.
+
+There is a DigiTemp support mailing list available from
+https://lists.brianlane.com/mailman/listinfo/
+
+
+  Quick Setup
+  -----------
+
+  DigiTemp requires very little setup in order to work. Basically there are 4 
+requirements:
+
+  1. Permission to access the serial port you will be using.
+  2. Permission to write to /var/lock if you are using Linux
+  3. A 1-wire serial port adapter
+  4. A 1-wire sensor connected to the adapter
+  
+  If you think you have all of these taken care of you can try the following to
+see if it 'Just Works':
+
+  1. Initialize the ./.digitemprc file with the following command:
+
+    digitemp -s/dev/ttyS2 -i
+
+    If you had my 1-wire setup (hub and sensors) you would see this:
+    
+	DigiTemp v3.3.0 Copyright 1996-2004 by Brian C. Lane
+	GNU Public License v2.0 - http://www.brianlane.com
+	Turning off all DS2409 Couplers
+	...
+	Searching the 1-Wire LAN
+	1F404301000000E4 : DS2409 MicroLAN Coupler
+	1FB03001000000B5 : DS2409 MicroLAN Coupler
+	1F881D01000000ED : DS2409 MicroLAN Coupler
+	22B9B20500000049 : DS1822 Econo-Temperature Sensor
+	286D1D2D000000EA : DS18B20 Temperature Sensor
+	104C4D55000800D9 : DS1820/DS18S20/DS1920 Temperature Sensor
+	1092B9330008002E : DS1820/DS18S20/DS1920 Temperature Sensor
+	1009212E0008004B : DS1820/DS18S20/DS1920 Temperature Sensor
+	1067FF33000800C2 : DS1820/DS18S20/DS1920 Temperature Sensor
+	26E22C1500000046 : DS2438 Temperature, A/D Battery Monior
+	ROM #0 : 22B9B20500000049
+	ROM #1 : 286D1D2D000000EA
+	ROM #2 : 104C4D55000800D9
+	ROM #3 : 1092B9330008002E
+	ROM #4 : 1009212E0008004B
+	ROM #5 : 1067FF33000800C2
+	ROM #6 : 26E22C1500000046
+	Wrote .digitemprc
+
+    Your network will be different, but the output should look similar, with 
+    it listing the recognized devices, their serial numbers, and ROM numbers.
+
+ 4. Read all the temperatures with this command:
+
+    digitemp -a
+
+    Again, if you were using the same 1-wire lan as I am you would see:
+    
+	DigiTemp v3.3.0 Copyright 1996-2004 by Brian C. Lane
+	GNU Public License v2.0 - http://www.brianlane.com
+	Jan 11 08:33:41 Sensor 0 C: 22.50 F: 72.50
+	Jan 11 08:33:42 Sensor 1 C: 31.44 F: 88.59
+	Jan 11 08:33:43 Sensor 2 C: 21.56 F: 70.81
+	Jan 11 08:33:44 Sensor 3 C: 12.19 F: 53.94
+	Jan 11 08:33:46 Sensor 4 C: 21.00 F: 69.80
+	Jan 11 08:33:47 Sensor 5 C: 4.38 F: 39.88
+	Jan 11 08:33:48 Sensor 6 C: 27.53 F: 81.56 H: 23%
+
+ 5. If it doesn't work, try running the initialization again.
+    Make sure you have the right serial port and that it works, try
+    plugging an external modem into the port and check that it works by
+    using a terminal program such as minicom. If all else fails, email me! 
+    
+    On older Linux kernels there was a problem with serial port support 
+    being a loadable module. With newer (v2.2.x and later) Linux kernels I 
+    have not noticed any problems with loadable modules.
+
+    The problems that people usually run into are:
+    
+    	a. Permission problems. DigiTemp will complain if you don't have
+	   +rw permission on the serial port specified so this is a pretty 
+	   easy one to catch. The same goes for permission on /var/lock/
+	   
+	b. Wrong serial port. Make sure you know which port the adapter is
+	   plugged into. If you are using a DS2480 based adapter DigiTemp 
+	   will complain when it cannot find the DS2480.
+	   
+	c. Bad connections. Make sure your wiring is correct. This is usually
+	   only a problem with home built passive adapters.
+	   
+	d. Bad serial port. Test the port with an external modem to make sure
+	   it really does work.
+	   
+	e. If you are seeing a temperature reading of 85C then you probably
+	   built your own sensors and didn't connect the sensor's +5v pin to 
+	   GND to enable parasite power mode (assuming that you are not using
+	   an external +5v power supply).
+	   It can also be caused by not enough read time, the DS18S20 needs 
+	   about 750mS to do a temperature conversion. This time can be 
+	   adjusted with the -r X argument, but the default is 1000mS which 
+	   should be fine for most applications.
+
+ 6. Read the rest of this document to learn how to log data to a file, how
+    to upload include files to a remote web server, and how to setup different
+    logfile format strings.
+
+
+  DigiTemp Overview
+  -----------------
+  
+  DigiTemp is a command line application used for reading 1-wire sensors like 
+the DS18S20 temperature sensor, or DS2438 battery monitor. DigiTemp supports
+the following devices:
+
+  DS18S20 (and older DS1820) Temperature Sensor
+  DS18B20 Temperature Sensor
+  DS1822 Temperature Sensor
+  DS2438 Battery monitor
+  DS2409 1-wire coupler (used in 1-wire hubs)
+  DS2422 Counter
+  DS2423 Counter
+  
+  The output format can be customized and all settings are stored in a 
+configuration file (.digitemprc) in the current directory. DigiTemp can 
+repeatedly read the sensors and output to stdout and/or to a logfile.
+
+  I include a variety of scripts in Perl and Python for processing the output
+of DigiTemp and doing various things with the data. Like logging to a Round
+Robin database for easy graph generation, logging to a MySQL database, or using
+GNU Plot to plot graphs from logfiles.
+  
+  
+  Initialization
+  --------------
+
+  Before you can read the sensors you need to initialize the list of serial 
+numbers (each 1-wire sensor has a unique 64 bit serial number used to address
+it on the bus). When you add sensors to your lan you need to rerun the 
+initialization process -- be aware that the order that they are detected in 
+depends on their number, so when you add new sensors it may change the order
+of your sensors.
+
+  When you specify the -i option to initialize the .digitemprc file the program
+will store the serial port, serial numbers of the attached sensors, the read
+delay time, log format type, and the log specifier string. The .digitemprc
+file is written into the current directory.
+
+  The .digitemprc file is read before the command line arguments are read,
+this way the configuration can be temporarily overridden by passing
+arguments to the digitemp program.
+
+  Digitemp needs at least the -w, -a or -t option to tell it to walk the lan, 
+read all sensors, or read 1 sensor. This is after you have initialized the 
+system with the -i command of course.
+
+  You need to make sure you have permisson to access the serial port and 
+under Linux the /var/lock directory. To allow access to the serial port, add 
+the user that will be running DigiTemp to the uucp group (or whatever group 
+owns the serial port device). To allow access to the lock directory add the 
+same user to the lock group.
+     
+  Alternativly you can set-group-id the binary to the lock group so that anyone
+running it will only need to be added to the serial port group, not the lock 
+group.
+
+  chmod g+s digitemp
+  chown .lock digitemp
+
+
+
+  Tree Walking
+  ------------
+  
+  No acrobatics here, but if you run ./digitemp -w -s/dev/ttySx the program will
+show all devices on the one-wire network and traverse all couplers connected
+to the main LAN. The only thing it doesn't support is nested couplers (couplers 
+connected to the branch of another coupler). The output will identify each 
+device connected, even if it isn't a sensor that DigiTemp supports.
+
+	DigiTemp v3.3.0 Copyright 1996-2003 by Brian C. Lane
+	GNU Public License v2.0 - http://www.brianlane.com
+	Turning off all DS2409 Couplers
+	...
+	Devices on the Main LAN
+	1F404301000000E4 : DS2409 MicroLAN Coupler
+	1FB03001000000B5 : DS2409 MicroLAN Coupler
+	1F881D01000000ED : DS2409 MicroLAN Coupler
+
+
+	Devices on Main Branch of Coupler : 1F404301000000E4
+
+	Devices on Aux Branch of Coupler : 1F404301000000E4
+
+	Devices on Main Branch of Coupler : 1FB03001000000B5
+	22B9B20500000049 : DS1822 Econo-Temperature Sensor
+
+	Devices on Aux Branch of Coupler : 1FB03001000000B5
+	286D1D2D000000EA : DS18B20 Temperature Sensor
+
+	Devices on Main Branch of Coupler : 1F881D01000000ED
+	104C4D55000800D9 : DS1820/DS18S20/DS1920 Temperature Sensor
+	1092B9330008002E : DS1820/DS18S20/DS1920 Temperature Sensor
+	1009212E0008004B : DS1820/DS18S20/DS1920 Temperature Sensor
+	1067FF33000800C2 : DS1820/DS18S20/DS1920 Temperature Sensor
+
+	Devices on Aux Branch of Coupler : 1F881D01000000ED
+	26E22C1500000046 : DS2438 Temperature, A/D Battery Monior
+
+
+  Temperature Logging
+  -------------------
+
+  To log temperatures to a logfile instead of to the console you use the
+-l command line option. I have a cron job that runs every 30 minutes and
+logs the temperatures to a file called /var/log/temperature. The cron entry
+look like this:
+
+    0,30 * * * *      /usr/local/bin/digitemp -a -l/var/log/temperature
+
+  This can be added to your crontab using the crontab -e command from the 
+user's account that you want to run digitemp from.
+
+  The format of the data to be written to the logfile can be controlled in
+several ways. The default is to use a format specifier string that outputs
+a line of data like: Dec 29 20:52:29 Sensor 1 C: 1.70 F: 35.06
+
+  The -o argument is used to change this. Using -o2 or -o3 will output all the
+sensor readings on a single line like: 0       23.22   1.33    12.69
+
+  The first number is the elapsed time (see timing, below) and the rest are
+the sensor readings, separated by tabs. This makes it easy to import the data
+into a spreadsheet program. The data is output in Centigrade when -o2 is used
+and Fahrenheit when -o3 is used.
+
+  The other option is to use a format specifier string. To do this you pass
+the string as the argument to -o, like this:
+  -o"%b %d %H:%M:%S Sensor %s C: %.2C F: %.2F"
+
+  The specifiers are the same as those used for strftime with the addition of
+five special ones. %s for the sensor number, %C for the temperature in
+Centigrade and %F for the temperature in Fahrenheit. %R outputs the sensor's
+serial number in HEX, and %N output the number of seconds since Epoch (this
+is because DigiTemp's %s masks the %s which normally does this in strftime.
+See the strftime manpage for the rest of the specifiers that are supported.
+
+  The new counter specifier string has 2 special specifiers:
+  %n is the number of the counter
+  %C is the count for that counter
+  
+  The counter log format is specified by the -O command line argument, it is 
+stored in the configuration file when executed with a -i command.
+
+  Humidity support adds the %h specifier for humidity from 0-100%, and the 
+format is specified by the -H command line argument. It too is saved to the 
+configuration file when executed with a -i command. The %C and %F in the 
+humidity specifier will display the temperature of the humidity sensor.
+
+  If the -A command is passed then the humidity sensor data will be output as 
+raw voltages from the DS2438. The format string for this is hard-coded and 
+the output looks like this:
+
+	DigiTemp v3.3.0 Copyright 1996-2003 by Brian C. Lane
+	GNU Public License v2.0 - http://www.brianlane.com
+	Jan 11 16:56:00 Sensor 6 VDD: 4.70 AD: 1.46 C: 27.94
+
+
+  In the rrdb directory you will find a collection of scripts that I use to
+generate the graphs at www.brianlane.com/digitemp.php, they create a RRDB
+database and log data to it every 5 minutes. The web server dynamically
+generates a graph when a page update is requested.
+
+  RRDB is the Round Robin Database Tool, and it is available for free from
+its website at http://ee-staff.ethz.ch/~oetiker/webtools/rrdtool/
+
+  you will also find a collection of other useful scripts, written in Perl and
+in Python in the perl and python directories. All of these scripts will need 
+some tweaking to work with your unique setup. 
+
+
+  Timing
+  ------
+
+  The Read timeout is the amount of time for DigiTemp to pause after
+issuing a temperature conversion command before it reads the temperature
+(it takes the DS1820 a few milliseconds to do the conversion and make the
+temperature available to DigiTemp). The default value for this is 1000mS. The
+Read timeout can be set by issuing the following command:
+
+    digitemp -r500      Set Read timeout to 500mS
+    digitemp -i -r500   Set Read timeout to 500mS and save to .digitemprc
+
+  If Read timeout is set too short the temperature will not be read correctly.
+The shortest I can set it with my sensors is 300mS before they fail. You may
+have other problems if the delay is set too short, depending on the
+temperature being read. I currently have mine set to 1000mS.
+
+  The older DS1820 sensors would work with a read timing of about 500mS, but
+the new (and greatly improved IMHO) DS18S20 takes a little longer, between
+750mS and 1S, so I have set the default to 1S.
+
+
+Repeated Temperature Sampling
+-----------------------------
+
+  You can setup a script to repeatedly call DigiTemp and process its output,
+or you can setup DigiTemp to repeatedly sample the sensors and output the
+data in one of the logfile formats specified in the 'Temperature Logging'
+section of this document.
+
+  -dx   This sets the sample interval. x is a number in seconds.
+	-d5 will sample at 5 second intervals. The number of sensors
+	that you have attached will determine the minimum interval that
+	you can use. It can take as long as 1/2 second to sample each
+	sensor attached, so if you have 6 sensors you will probably have
+	a minimum sample interval of 3 seconds. The program will tell you
+	when the sampling process has taken longer than the interval you
+	have specified so that you can adjust it accordingly.
+
+  -nx   This sets the number of times to sample all the specified sensors.
+	-n10 will sample 10 times. Setting -n0 will make it loop forever.
+
+  The output can be sent to a file by using the -lfilename.txt options. So
+to log data every 10 seconds for 30 minutes you would run DigiTemp to sample
+every 10 seconds for a count of 180 (10 x 180 = 1800 seconds = 3 minutes) like
+this:
+
+    digitemp -a -d10 -n180 -o2 -ldata1.txt
+
+  This outputs the data as tab separated Centigrade readings to a file named
+data1.txt in the current directory.
+
+
+  Web scripts
+  -----------
+
+    I have written some Perl scripts for use with local or remote web
+pages:
+
+  web_temp	This can be used as a CGI binary and will show the last
+		two entries from the /var/log/temperature file
+
+  inc_temp	This can be called from a cron job to create a server side
+		include file that can be included from your webpage.
+
+  rem_temp	This is the script I use to update my webpage at
+                www.brianlane.com/digitemp.php every hour (or whenever the
+		script can get through the busy signals). It creates
+		a shtml file in the /tmp/ directory and then uses the Perl
+		ftp functions to upload it to the remote site. The script
+		lists the modules that need to be added to Perl to enable
+		ftp.
+
+		You need to have a connection script working for this script
+		to work correctly. Or if you have diald just comment out
+		the ppp-on and off lines. Please consult the various Linux
+		howto FAQs for information on how to construct the connect
+		scripts if you don't already have them set up.
+
+  maxplot	This perl script generates the temperature graph that you
+		can use on your webpage.
+		They require the GD module for perl, which is available
+		from -
+                  http://www.perl.com/CPAN-local//modules/by-module/GD/
+
+		It generates a .gif file, and move the file to the final
+		location, so it will need some small changes in the paths
+		and ownership at the end of the scripts to customize it for
+		your setup.
+
+  RRD tool	I have also written several scripts to manipulate data
+		with RRD (Round Robin Database) tool databases. RRD tool
+		is available from -
+		  http://ee-staff.ethz.ch/~oetiker/webtools/rrdtool/
+		There are several scripts, one to add data to the database,
+                and one to retrieve data as a .png image.
+
+  NetSaint      I have written a Net Saint/Nagios (http://www.nagios.com)
+		plugin. It is named check_digitemp.pl and it located in the
+		perl directory. Installation instructions are in the top of
+		the file's comments.
+
+  MySQL		I have written a perl script to log temperature readings to
+		a MySQL database. It is named digitemp_mysql.pl and is in
+		the perl directory. Instructions for setup and use are in
+		the README file in the perl directory.
+
+    The scripts have been commented so that you can change them easily (I
+hope! Email any changes you have). There are several variables that need to
+be setup for your system before they will run.
+
+  If you have any comments, questions, or scripts that you would like to
+donate, drop me an email, and I'll set up a ftp directory for user
+contributions.
+
+  Have Fun! And when you get your sensors up on your website send me the URL
+and I will add it to the list at http://www.digitemp.com/users.shtml
+
+    Brian C. Lane
+    bcl@brianlane.com
+    http://www.brianlane.com
+
+Release notes
+-------------
+  Version 3.6.0 adds ...
+
+  Version 3.5.0 adds DS1923 Hygrochron support, fixes some small bugs in the
+userial driver. A lockdev bug was fixed (wasn't unlocking when done), a
+crash in free_couplers() was fixed, better error reporting when trying to
+access serial ports that don't exist, compiled for Windows with cygiwn. 
+DS2490/9490 support still doesn't work well for me, although others have 
+had success with it.
+
+  Version 3.4.0 fixes temperature output using -o2 and -o3 log formats with
+the DS2438 sensor.
+
+  Version 3.3.2 fixes the broken DS9097 support that I hosed in v3.3.1 and 
+adds a performance patch to DS9097 from Erik Rigtorp that should speed up
+passive adapter operations.
+
+  Version 3.3.1 works with the DS9490R USB adapter using the DS2490 USB to 
+1-wire adapter chip. It needs to be run as root, and your version of libusb
+may need to be patched using the patch in the ./contrib directory
+
+  Version 3.3.0 adds support for the DS2490 USB adapter, DS2438 battery monitor
+and AAG TAI-8540 humidity sensor module. Additional format string specifiers
+have been added to handle the humidity reading. See the Initialization section
+below.
+
+  The binary generated when building from source is now digitemp_DS9097, 
+digitemp_DS9097U, or digitemp_DS2490 depending on which build you do. You can
+then make a symlink to 'digitemp' for whichever adapter you need to use.
+
+  I now recommend use of the iButtonLink from www.ibuttonlink.com, it is 100%
+compatible with the DS9097U, but has been engineered to work with longer 
+networks more reliably.
+  
+  Version 3.1.0 adds support for the DS2406 counters. A new output format
+specifier has been added, using the -O option (capital Oh, not lower case).
+I have included my first pass at a python script to log to MySQL and RRD.
+
+  Version 3.0.0 adds support for both the DS9097 passive adapter, and the newer
+DS9097U adapter. It also introduces a better makefile and less CPU usage
+when repeatedly reading multiple sensors.
+
+  Version 2.5 adds compilation under Solaris. A new log option of %R has
+been added to output the serial number in hex in the logging output string.
+The quiet -q option now quiets down the 1-Wire walk and initalize routine so
+that only the important information is output.
+
+  Version 2.4 fixes the problems (finally!) with the DS18B20 and DS1822
+sensors. I have also modified the search and read algorithms so that they
+will work faster when used with a 1-wire hub.
+
+  Version 2.3 adds support for one wire hubs like Simon Atkin's hub that can
+be found at www.simat.enta.net
+
+  Version 2.x.x removes support for the old adapter (based on the one
+described in App. Note 74 from Dallas Semiconductor. Version 1.3 still
+supports the older adapters and is now also released under the GNU public
+license). This new version uses the DS9097-U adapter available from Dallas
+Semiconductor. You can order them from their iButton webpage at
+www.ibutton.com
+
+  This adapter is more expensive but is easier to program and support higher
+current capability so that it should work at higher temperatures than the
+previous adapter.
+

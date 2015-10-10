@@ -1,0 +1,17 @@
+This script is pretty rough at the moment. I haven't made any attempt to
+clean it up and make it more user friendly yet. But it does work if you're
+willing to take the time to tweak it. It reads temps, logs them to a MySQL
+database named weather as a user named weather, logs the data to a RRD and
+writes a new sigfile.
+
+Requirements are:
+  DigiTemp v3.1.x+       http://www.digitemp.com
+  MySQL database         http://www.mysql.org
+  Round Robin Database   http://people.ee.ethz.ch/~oetiker/webtools/rrdtool/
+  Python MySQLdb module  http://www.mysql.com/downloads/api-python.html
+
+If you find any problems, let me know. I may have forgotten something.
+
+The windspeed calculation isn't correct. I'm still working on graphs that
+are based on the MySQL database data.
+

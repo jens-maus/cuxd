@@ -1,0 +1,173 @@
+DigiTemp v3.6.0 Frequently Asked Questions
+Copyright 1996-2008 by Brian C. Lane <bcl@brianlane.com>
+http://www.brianlane.com
+http://www.digitemp.com
+
+Q. Where Do I buy Parts?
+
+   From www.ibuttonlink.com
+   I have discontinued my hardware products so that I can spend more time on
+   software. ibuttonLink makes a great serial adapter, and they have picked
+   up production of my DT1A sensors.
+   
+   www.aagelectronica.com produces a full line of 1-wire products at a 
+   very reasonable proce, including temperature sensors, humidity and pressure,
+   weather stations, hubs, etc.
+   
+   Places to avoid are www.buffalorun.com, all I see are numerous complaints
+   on the mailing lists about how he doesn't deliver and doesn't communicate.
+   
+   If you want to build them yourself you can get parts from either 
+   www.maximic.com or www.digikey.com for sensors. For serial port adapters 
+   I now recommend using iButtonLink instead of DS9097U's -- Maxim raised
+   the proce so much that the little extra you spend for the Link is well
+   worth it.
+
+   I order my temperature sensors directly from Dallas Semiconductor
+   at 1-800-336-6933 (http://www.dalsemi.com/sales/credit_card.html)
+
+   DigiKey (http://www.digikey.com) now has DS18S20 sensors in stock as
+   well.
+
+Q. How do I connect it to the RJ-11 of the DS9097U
+
+   Take a look at the DS9097U data sheet at
+     http://pdfserv.maxim-ic.com/arpdf/DS9097U-009-DS9097U-S09.pdf
+
+   Ground is the pin on the right and data is the pin on the left (using
+   the two center pins of the RJ-11).
+
+   Even with this information you will probably get it backwards the first
+   time so make a temporary connection the first time and confirm that 
+   you have the correct polarity.
+
+   Holding the RJ-11 plug so that it is facing you (as if you were going to
+   plug it into your mouth), with the clip on the top.
+             ____
+           --|  |--
+           | 4321 |
+           --------
+
+   1 = NC
+   2 = Ground
+   3 = Data
+   4 = NC
+
+   The same applies for the RJ-45 connectors.
+
+
+Q. How many can I connect?
+
+   Read the Dallas Semiconductor Tech. Brief on the One Wire Network.
+     http://www.maxim-ic.com/appnotes.cfm/appnote_number/570
+
+   It covers everything you want to know and more. The limit comes down to
+   wiring, how much you have and how good it is. Other than that you can
+   connect as many as you need.
+
+   www.pointsix.com also has some very good app notes on network length
+   and ringing problems.
+
+   Having a 1-wire hub for complicated netowrks and supplying +5v instead
+   of using the sensors in parasite mode will also help you create larger
+   and more reliable networks.
+
+Q. How long can the wire be?
+
+   Again, read the Tech. Brief above. This depends on the cable. Using
+   better cable will allow you to extend the cable longer distances. CAT5
+   is the recommended cable for networks of almost any length. You can get
+   away with other cable but be prepared to rip it all up and replace it 
+   with CAT5 if it doesn't work.
+   
+   Having a hub and supplying +5v to the sensors will increase the liklihood
+   of your long network operating properly. I have had reports of people using
+   CAT5 and a passive network up to 200m long.
+
+Q. I get a result of 85C when reading temperatures
+
+   85C is the error state of the DS18S20 sensor, and it usually indicates that
+   one of 2 things are wrong:
+
+   1. If you are using parasite powered sensors you forgot to ground the +5v
+      pin to put the sensor into parasite mode.
+
+   2. You are trying to read the sensor too quickly. The DS18S20 needs about
+      750mS of delay in order to properly convert the temperature.
+         
+
+Q. I have glitches in my data, what do I do?
+
+   The first solution is to check all of your connections to make sure
+   they are soldered or well connected.
+
+   Next, is your cable decent quality? Cat-5 is the best, with twisted
+   telephone cable coming in second.
+
+   If you are still having problems you should try Using a Schottky
+   diode across the cable's end. Connect the diode reverse-biased with
+   the cathode (the stripe) on the data line and anode on the return. 
+
+   I used a 1N5818 across my attic sensor -- before adding this I was
+   getting multiple glitches per hour. Now I have seen 1 glitch in
+   about 2 weeks. 
+
+   You can also buy pre-assembled sensors that include a 1N5817 diode from
+   my DigiTemp Hardware page at http://www.brianlane.com/dthardware.php
+
+Q. What is the difference between the DS9097-U and the App. Note 74 type
+   of adapter.
+
+   The DS9097-U adapter uses a serial port to 1-wire conversion chip that
+   makes talking to the 1-wire network easier. DigiTemp v2.x uses this
+   type of adapter (the DS9097U-009 and -S09 both work fine).
+
+   The old style of adapter (sometimes called passive or App. Note #74)
+   used only diodes and resistors to convert the serial port voltages to
+   the one-wire voltages. Dallas still sells adapters of this type, part
+   number DS9097 and DS9097E that is built on this design. DigiTemp v1.x
+   supports this type of adapter, and include a HOWTO document with
+   instructions for building your own.
+
+   As of DigiTemp v3.0.0 support for both style adapters has been integrated
+   into the same code tree. You no longer need to use v1.x for the DS9097 passive
+   adapter and v2.x for the DS9097U adapter.
+
+Q. When will digitemp support the one-wire hub?
+
+   It does! As of v2.3 it scand for the DS2409 couplers used in the hubs
+   and keeps track of which branch it finds the sensors on. It doesn't
+   support cascaded hubs (hubs connected behind a hub), only multiple hubs
+   on the main 1-wire lan.
+   
+Q. When will Digitemp support the one-wire Weather Station?
+
+   Probably never. DigiTemp has 1 purpose - to read temperatures. Weather
+   station support is more complicated and requires a dedicated program to
+   be watching the station and recording events like weather vane movement
+   and wind-speed calculations. I may add support for humidity and
+   barometric pressure, especially if someone were to donate a unit for me
+   to use.
+
+   I have found a possible source for Humidity, Barometer and Lightning 
+   sensors at http://www.jjware.com/index2.htm
+   
+   I do have plans to write my own weather station software though. No release
+   date as of yet, but it is being worked on.
+
+Q. When will it support 1-wire device X?
+
+   The quick answer is "When someone sends me one". DigiTemp v3.3.0 now has
+   support for the DS2438 battery monitor which is used in many of the more
+   complicated sensors, like humidity and pressure. It also has native
+   support for humidity using the AAD TI-8540 humidity sensor.
+   
+   
+Q. Will the DS2490 USB to 1-wire adapter work?
+
+   Maybe. I have reports of varying levels of success with it. On my Debian
+   Sarge system using libusb 1.4 it does not work. On my Fedora Core 3 
+   laptop it worked sometimes. On OSX it does not work. Some people report that
+   it works fine for them, others are like me and have mixed results.
+
+

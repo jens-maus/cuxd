@@ -1,0 +1,165 @@
+.TH DIGITEMP 1 "August 2008"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+digitemp \- program to read from 1-wire temperature sensors. 
+.SH SYNOPSIS
+.B digitemp
+.RI [ options ] 
+.SH DESCRIPTION
+DigiTemp uses the Dallas 1-wire bus to read temperatures from digital
+sensors attached to a serial port adapter. It handles initializing the bus,
+searching for attached devices, reading devices and custom log strings. It
+suports the following temperature devices: DS1820, DS18S20, DS18B20, DS1822
+.PP
+It also handles the DS2406 1-wire hub switches, and DS2422 and DS2423
+counters.
+.PP
+DigiTemp uses either the DS9097 passive serial port adapter, or the
+DS2480B based DS9097U adapter. 1-wire adapters from ibuttonlink.com,
+such as the Link45 are also supported.
+.SH OPTIONS
+At least 1 action must be given, along with some optional arguments. Actions
+are one (and only on) of the 
+.B \-w \-t \-a \-w 
+options
+.TP
+.B \-h, \-?
+Show summary of options.
+.TP
+.B \-v
+Show verbose output.
+.TP
+.B \-i 
+Initialize .digitemprc file, search the bus for all supported devices.
+.TP
+.B \-I
+Initialize .digitemprc file, search the bus for all supported devices, store devices
+in sorted serial # order.
+.TP
+.B \-w
+Walk the full device tree and display the serial number and type of all
+devices detected on the bus.
+.TP
+.B \-s /dev/ttyS0
+Set serial port to use. Make sure you have permission to access this port. For USB
+operation pass USB instead of /dev/ttySX
+.TP
+.B \-l /var/log/temperature
+Send output to logfile, the output format is defined by the .B \-o
+command
+.TP
+.B \-c digitemp.conf
+Set digitemp configuration file. The default is .digitemprc in the current 
+directory.
+.TP
+.B \-r 1000
+Read delay in ms. This sets the amount of time to wait between sending the
+temperature conversion command and reading the result. The DS18S20 takes
+about 750mS to do the temperature conversion. Default is 1000mS (1 sec).
+.TP
+.B \-t #
+Read sensor number #, the # depends on the order of the sensors in the
+\&.digitemprc file.
+.TP
+.B \-q
+Quiet output, no copyright banner.
+.TP
+.B \-a
+Read all sensors.
+.TP
+.B \-A
+Treat DS2438 as A/D converter, output raw voltages and currents.
+.TP
+.B \-d 5
+Delay between samples (in seconds).
+.TP
+.B \-n 50
+Number of times to repeat the command.
+.TP
+.B \-O"counter format string"
+See Counter Format below.
+.TP
+.B \-o [1..3] ["output format string"]
+See Temperature Format below.
+.TP
+.B \-H"Humidity format string"
+See Humidity Format below.
+.PP
+.SH
+Temperature Format
+.PP
+The temperature format can be either a numeric value, or a string. The
+numeric values select pre-configured output formats:
+.PP
+    1 = One line per sensor, time, C, F (default) 
+    2 = One line per sample, elapsed time, temperature in C
+    3 = Same as #2, except temperature is in F
+.PP
+#2 and #3 have the data seperated by tabs, suitable for import into a 
+spreadsheet or other graphing software.
+.PP
+The format string uses strftime tokens plus 5 special ones for
+DigiTemp:
+.TP
+.B %s
+for sensor #
+.TP
+.B %C
+for centigrade
+.TP
+.B %F
+for fahrenheit
+.TP
+.B %R
+to output the hex serial number
+.TP
+.B %N
+for seconds since Epoch.
+.PP
+The case of the token is important! The default format string is:
+"%b %d %H:%M:%S Sensor %s C: %.2C F: %.2F" which gives you an
+output of: May 24 21:25:43 Sensor 0 C: 23.66 F: 74.59
+.PP
+The DS2438 sensor can be used for a variety of things. It includes a 
+temperature sensor and A/D converter. DigiTemp defaults to using it as a
+humidity sensor. The raw voltages and currents can be displayed by passing 
+the \-A argument
+.PP
+When the \-o2 or \-o3 log options are used the attached DS2438's temperatures
+will be output without the humidity.
+.PP
+.SH
+Counter Format String
+.PP
+The counter format string is similar, adding these tokens:
+.TP
+.B %n
+is the counter #, which depends on its position in the .digitemprc file
+.TP
+.B %C
+is the count in decimal.
+.PP
+.SH
+Humidity Format String
+.PP
+The Humidity format string is the same as the temperature format string
+with the addition of this format specifier:
+.TP
+.B %h
+is the humidity in 0-100%
+.PP
+.SH AUTHOR
+This manual page was written by Jes\['u]s Roncero <jesus@roncero.org>,
+for the Debian project (but may be used by others). Modifications by Brian
+C. Lane <bcl@brianlane.com>
+.SH UPDATES
+DigiTemp updates can be found on the http://www.digitemp.com website.
