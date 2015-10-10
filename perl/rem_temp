@@ -1,0 +1,154 @@
+#!/usr/bin/perl -w
+#
+# DigiTemp remote system update script
+# Copyright 1997-2001 by Brian C. Lane <bcl@brianlane.com> www.brianlane.com
+# All Rights Reserved
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
+#
+
+#
+# Read the temperature logfile, write it to an include file for the webpage,
+# then ftp the files to the destination server.
+#
+# The following perl extensions are required :
+# libnet package from http://www.perl.com/CPAN-local/modules/by-module/Net/
+#   I used libnet-1.0506.tar.gz
+#
+# Data-Dumper package from: CPAN/modules/by-module/Data/Data-Dumper-x.x.tar.gz
+#   I used Data-Dumper-2.07.tar.gz
+
+#
+# Sensor #0 is the Window
+# Sensor #1 is the inside of the Linux box
+#
+# Dec 18 21:46:47  Sensor 0 C: 8.81 F: 47.86
+# Dec 18 21:46:47  Sensor 1 C: 26.41 F: 79.54
+#
+use Net::FTP;
+
+# Include file for the webpage (included from the main page)
+$inc_file = "/tmp/temp.inc";
+
+# Temperature logfile updated by seperate DigiTemp daemon
+$log_file = "/var/log/temperature";
+
+# Script to run to bring up the link
+# I use diald, you probably use something different.
+$ip_up = "/usr/sbin/dialdc up";
+
+# Your username for the destination ftp server
+$ftp_user = "username";
+
+# Your password for the destination ftp server
+$ftp_pass = "password";
+
+# Destination ftp server's address
+$ftp_host = "ftp.host.com";
+
+# Directory on the destination ftp server to place $inc_file
+$dest_dir = "/home/login/public_html";
+
+# Create a new include file, overwrite the old one
+open( INCFILE, ">$inc_file") || die "Can't open $inc_file";
+
+# Include a break line and center the text
+print INCFILE "<HR>\n";
+print INCFILE "<CENTER>\n";
+
+# You should customize this!
+print INCFILE "The current temperatures are<P>\n";
+
+# Run tail -2 /var/log/temperature and parse the output
+# The -2 is the number of sensors you have (last 2 lines from logfile)
+open( TEMPLOG, "tail -2 $log_file |") || die "Can't fork: $!";
+
+# Parse the output of the tail program
+while( <TEMPLOG> )
+{
+  # Get the time and date, sensor number, temperature in c and f
+  ($month,$day,$time,$d1,$sensor,$d1,$centigrade,$d1,$fahrenheight) = split( " ", $_ );
+
+  # Print some custom messages for the sensors
+  # The \xB0 is supposed to be a degree symbol. This works on some systems
+  # but not on others.
+  if( $sensor eq '0' )
+  {
+    print INCFILE "The modems are at $fahrenheight\xB0 F ($centigrade\xB0 C)<BR>\n";
+  }
+
+  if( $sensor eq '1' )
+  {
+    print INCFILE "The room is a ";
+
+    if( $fahrenheight < 40.0 )
+    {
+      print INCFILE "freezing";
+    }
+
+    if( $fahrenheight >= 40.0 and $fahrenheight < 70.0 )
+    {
+      print INCFILE "chilly";
+    }
+
+    if( $fahrenheight >= 70.0 and $fahrenheight < 80.0 )
+    {
+      print INCFILE "comfortable";
+    }
+
+    if( $fahrenheight >= 80.0 and $fahrenheight < 100.0 )
+    {
+      print INCFILE "balmy";
+    }
+
+    if( $fahrenheight >= 100.0 )
+    {
+      print INCFILE "blistering";
+    }
+
+    print INCFILE " $fahrenheight\xB0 F ($centigrade\xB0 C)<BR>\n";
+  }
+}
+
+print INCFILE "Last updated: $month $day $time<BR>\n";
+
+# Blantant advertisement <G>
+print INCFILE "<PRE>These temperatures generated with ";
+print INCFILE "<A HREF=\"http://www.brianlane.com\">";
+print INCFILE "DigiTemp</PRE><BR>\n";
+print INCFILE "</CENTER>\n";
+
+close( TEMPLOG );
+close( INCFILE );
+
+# Send it to the server
+# Fire up the link
+system $ip_up;
+
+# Wait a little bit to let ppp0 come up
+sleep 60;
+
+# Send it to the server
+$ftp = Net::FTP->new($ftp_host);
+$ftp->login($ftp_user,$ftp_pass);
+$ftp->cwd($dest_dir);
+$ftp->binary();
+$ftp->put($inc_file);
+$ftp->quit;
+
+# Shut down the link
+system $ip_down;
+
+# done!

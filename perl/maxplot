@@ -1,0 +1,284 @@
+#!/usr/bin/perl
+# -*- Perl -*-
+#
+# DigiTemp v2.1 gnuplot script
+# Modified by Brian C. Lane <bcl@brianlane.com> www.brianlane.com
+# 
+# Modified plot script from Russell Nelson <nelson@crynwr.com>
+# for use with the GD module for Perl
+#
+# The GD module can be found at:
+#   http://www.perl.com/CPAN-local//modules/by-module/GD/
+#
+# More mods to add maximum and minimum temp display for each day
+# NOTE: You will need to change the commands at the bottom that tell
+# where to store and move the final .gif file to.
+#
+use GD;
+
+# Transform the temperature into graph coordinates. Convert to Farenheit
+# I already have fahrenheight data, so no conversion is needed.
+sub ytransform {
+    $temp = shift;
+#    $temp = $temp * 9 / 5 + 32;
+    return int(250 - 2*$temp);
+}
+
+# You will need to customize these values for your setup
+$height = 350;
+$hmargin = 40;
+$middlex = 300;
+# display them all!
+$dx=2.0/1.0;
+# # of temperatures per sample (number of sensors)
+$sensors = 3;
+$samples_per_hour = 2;
+# 5 Days, 24 hours a day, 2 samples per hour
+$samples = 5*24* $samples_per_hour;
+$width = $hmargin + $samples*$dx + $hmargin;
+
+# print PLOT "create plot $width $height\n";
+$im = new GD::Image( $width, $height );
+
+# Allocate a bunch of colors
+($white,$black,$red,$green,$orange,$lightgreen,$blue,$skyblue) = 
+    (
+     $im->colorAllocate(255, 255, 255),
+     $im->colorAllocate(0, 0, 0),
+     $im->colorAllocate(255, 0, 0),
+     $im->colorAllocate(0,255,0),
+     $im->colorAllocate(255,0,255),
+     $im->colorAllocate(0,128,0),
+     $im->colorAllocate(0,0,255),
+     $im->colorAllocate(100,100,255)
+     );
+
+# Grayscale -- Not currently used. I'll skip for now
+#for ($i=0; $i<128; $i++) {
+#    print PLOT "colorallocate plot gray$i ".$i*2 ." ".$i*2 ." ".$i*2 ."\n";
+#}
+
+#sub dogray {
+#    ($light) = @_;
+#
+#    if ($light < -70) {
+#	$gray = int(0.5 + 32 * ($light - -92) / (-70 - -92));
+#    } elsif ($light < 265) {
+#	$gray = int(32.5 + 32 * ($light - -70) / (265 - -70));
+#    } else {
+#	$gray = int(64.5 + 64 * ($light - 265) / (290 - 265));
+#    }
+#    $gray = 0 if ($gray < 0);
+#    $gray = 127 if ($gray > 127);
+#    print PLOT "filledrectangle plot ";
+#    print PLOT "$x 20  ";
+#    print PLOT $x+$dx." ".($height-20)."  gray$gray\n";
+#}
+
+
+
+# Draw a Horizontal line at a temperature point
+sub hline {
+    ($y,$color) = @_;
+    $color = $skyblue unless $color;
+    $yname = $y;
+    $y = &ytransform($y);
+    $ychar = $y-6;
+    $numleft = 10;
+    $lineleft = 26;
+    $lineright = $width - 24;
+    $numright = $width - 20;
+#    print PLOT "string plot gdFont6x13 $numleft $ychar \"$yname\" $color\n";
+    $im->string(gdSmallFont,$numleft,$ychar,$yname,$color);
+#    print PLOT "line plot $lineleft $y $lineright $y $color\n";
+    $im->line($lineleft,$y,$lineright,$y,$color);
+#    print PLOT "string plot gdFont6x13 $numright $ychar \"$yname\" $color\n";
+    $im->string(gdSmallFont,$numright,$ychar,$yname,$color);
+}
+
+# Draw the temperature reference lines
+#&hline(-20);
+&hline(0 );
+&hline(20 );
+&hline(32, $lightgreen );
+&hline(40 );
+&hline(60 );
+&hline(80 );
+&hline(100 );
+
+sub xtransform {
+    return $hmargin + $dx * shift;
+}
+
+# Draw a vertical line
+sub vline {
+    ($x,$label,$color) = @_;
+    $color = $skyblue unless $color;
+    $x = &xtransform($x);
+    $linetop = &ytransform(100);
+    $linebot = &ytransform(-20);
+    $ychar = &ytransform(107);
+#    print PLOT "string plot gdFont6x13 $x $ychar \"$label\" $color\n";
+    $im->string(gdSmallFont,$x-5,$ychar,$label,$color);
+#    print PLOT "line plot $x $linetop $x $linebot $color\n";
+    $im->line($x,$linetop,$x,$linebot,$color);
+}
+
+
+# See if the min or max data for the current day should be changed
+# This function has been tested and works
+sub minmax {
+  ($sample,$temp,$sensor) = @_;
+
+  $day = int($sample / (24 * $samples_per_hour ) );
+ 
+  if( $temp > $max_temp[$day][$sensor] )
+  {
+#print "oldmax[$day][$sensor] =  $max_temp[$day][$sensor]\n";
+      $max_temp[$day][$sensor] = $temp;
+#print "newmax[$day][$sensor] =  $max_temp[$day][$sensor]\n";
+  }
+
+  if( $temp < $min_temp[$day][$sensor] )
+  {
+#print "oldmin[$day][$sensor] =  $min_temp[$day][$sensor]\n";
+      $min_temp[$day][$sensor] = $temp;
+#print "newmin[$day][$sensor] =  $min_temp[$day][$sensor]\n";
+  }
+}
+
+
+# --------------------------------[ MAIN CODE ]----------------------------
+
+# Draw the vertical day lines
+&vline(0*24*$samples_per_hour," -5d");
+&vline(1*24*$samples_per_hour," -4d");
+&vline(2*24*$samples_per_hour," -3d");
+&vline(3*24*$samples_per_hour," -2d");
+&vline(4*24*$samples_per_hour," yesterday");
+&vline(5*24*$samples_per_hour," now");
+
+# Here we read in all the samples. I have 3 temps for every
+# 30 minutes within the day.
+$lines = $sensors * $samples;
+open(DOTTEMP, "tail -$lines /gonzo/var/log/temperatures|");
+@dottemp = <DOTTEMP>;
+close(DOTTEMP);
+
+# Now all the temps are in dottemp -- it might be better to read it line
+# by line for bigger files?
+
+# Initalize the initial variables - I should use a list for this
+$x = $hmargin;
+$_= $dottemp[0];
+@_ = split( " ", $_ );
+$lasty0 = &ytransform($_[8]);
+$_= $dottemp[1];
+@_ = split( " ", $_ );
+$lasty1 = &ytransform($_[8]);
+$_= $dottemp[2];
+@_ = split( " ", $_ );
+$lasty2 = &ytransform($_[8]);
+
+# Init the max and min temps and their points on the graph
+# Keep track of data for all of the last 5 days
+for( 0 .. 4 )
+{
+  $day = $_;
+  for( 0 .. 2 )
+  {
+    $max_temp[$day][$_] = -50;
+    $min_temp[$day][$_] = 200;
+  }
+}
+
+$sample = 0;
+
+# Plot each of the datapoints.
+foreach (@dottemp) {
+  # Get the time and date, sensor number, temperature in c and f
+  ($month,$day,$time,$d1,$sensor,$d1,$centigrade,$d1,$fahrenheight) = split(" ", $_ );
+
+# Plot the next line for each sensor
+# 0 - Harddrive #1 in gonzo
+# 2 - Room Temperature
+# 1 - Outside temperature
+  if( $sensor eq '0' )
+  {
+    $color = $red;
+    $y0 = &ytransform($fahrenheight);
+    $im->line(int($x),$lasty0,int($x+$dx),$y0,$color);
+    $lasty0 = $y0;
+
+#   Run minmax for the current day and sensor
+    &minmax( $sample, $fahrenheight, 0 );
+  }
+  if( $sensor eq '1' )
+  {
+    $color = $green;
+    $y1 = &ytransform($fahrenheight);
+    $im->line(int($x),$lasty1,int($x+$dx),$y1,$color);
+    $lasty1 = $y1;
+
+#   Run minmax for the current day and sensor
+    &minmax( $sample, $fahrenheight, 1 );
+  }
+  if( $sensor eq '2' )
+  {
+    $color = $orange;
+    $y2 = &ytransform($fahrenheight);
+    $im->line(int($x),$lasty2,int($x+$dx),$y2,$color);
+    $lasty2 = $y2;
+
+#   Run minmax for the current day and sensor
+    &minmax( $sample, $fahrenheight, 2 );
+
+# Count the number of samples so we can figure out what day it is
+    $sample++;
+
+#   move to next position
+    $x += $dx;
+  }
+}
+
+
+# Print the Header for the Min/Max data for each day
+for( 0 .. 4 )
+{
+  $im->string(gdSmallFont,3+&xtransform($_*24*$samples_per_hour),&ytransform(-1),"Min      Max",$black);
+}
+
+
+# Print the min and max temperatures
+
+# Print the min/max for each day and sensor
+for( 0 .. 4 )
+{
+$im->string(gdSmallFont,3+&xtransform($_*24*$samples_per_hour),&ytransform(-6),sprintf("%-6s   %s",$min_temp[$_][0],$max_temp[$_][0]),$red);
+$im->string(gdSmallFont,3+&xtransform($_*24*$samples_per_hour),&ytransform(-11),sprintf("%-6s   %s",$min_temp[$_][1],$max_temp[$_][1]),$green);
+$im->string(gdSmallFont,3+&xtransform($_*24*$samples_per_hour),&ytransform(-16),sprintf("%-6s   %s",$min_temp[$_][2],$max_temp[$_][2]),$orange);
+}
+
+# Add the Date and time
+$date = `date "+Generated at %H:%M on %a, %b %d %Y"`;
+chop $date;
+$im->string(gdSmallFont,$middlex-5,&ytransform(-30),$date,$black);
+
+# Advertise!
+$im->string(gdSmallFont,$middlex-5,&ytransform(-35),"with DigiTemp - http://www.brianlane.com",$black);
+
+# Print the Color Key
+$im->string(gdSmallFont,$hmargin,&ytransform(-30),"Harddrive #1",$red);
+$im->string(gdSmallFont,$hmargin,&ytransform(-35),"Room Temperature",$green);
+$im->string(gdSmallFont,$hmargin,&ytransform(-40),"Outside Temperature",$orange);
+
+# Output it to a .gif image file
+open( PLOT, ">/tmp/tempplot.gif");
+print PLOT $im->gif;
+close(PLOT);
+
+# copy the image to its final destination and make sure it is owned
+# by the right person.
+system "cp /tmp/tempplot.gif /home/nexus/.public_html/tempplot.gif";
+system "chown nexus.users /home/nexus/.public_html/tempplot.gif";
+system "chmod 0644 /home/nexus/.public_html/tempplot.gif";

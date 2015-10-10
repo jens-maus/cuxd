@@ -1,0 +1,79 @@
+X 0. Get USB adapter running using libusb and PDK.
+     Still need to run as root, but it is working.
+
+X a. Review changes and test code from Erik Rigtorp
+
+  b. Reduce cpu usage in the loop when doing multiple conversions
+
+X c. Add infinite loop
+
+  d. Catch TERM to exit the loop cleanly
+
+  e. review emails and make any other needed changes
+
+  1. Add global variables for the slew rate and re/write timing adjustments
+     in the ds2840ut.c file. Add control of these to the digitemp.c code.
+
+X 2. Add support for rpm building
+
+X 4. check for permission to open the serial device and complain when it
+     fails.
+
+X 6. Write some SQL based scripts. Perl to feed the database with the output
+     and PHP scripts to graph it using gd or ? modules in PHP.
+
+X 7. Change the sensor token so it doesnt conflict with ctime. change small s
+     to capital S.
+
+X 8. Loosen up checks for commands so -i -a will work!! -i should be allowed
+     with all others.
+
+X 9. Create a lockfile for the serial port in use, and check the lock file
+     before opening it.
+
+ 10. Fix problems using the USB serial port. Not sure what's happening. It
+     will sometimes work, most of the time fail. Extending VTIME didn't make
+     any noticable difference.
+
+     I changed global_msec_max (controls the time delay for characters in
+     the ReadCOM routine). It might be a slight improvement, but still fails
+     a considerable percentage of the time.
+
+     Sometimes the DS2480 detection fails, sometimes the search fails. It
+     will also sometimes run fine (and quickly).
+
+     Getting somewhere:
+
+     Fails: 17 45 5B 0F 91
+
+     Works: 16 44 5A 00 93
+
+     Sent : 17 45 5B 0F 91
+
+     Once : C1 17 45 5B 0F
+
+     I added a wrapper for DS2480Detect that retries up to 10 times before
+     giving up.
+
+     Extending the maximum time to 1.800 or so (1sec + 800mS) also helps it
+     run better. Without that it doesn't read the data very well. Without
+     the loop on DS2480Detect it doesn't work consistently with the dongle.
+
+     I need to add the delays back in, and see how they effect normal
+     operation. 
+
+
+
+X11. Add counter and switch support.
+     Counter support has been added. DS2406 counters.
+
+ 12. Add long-argument switches to the program so that counter and switch
+     results can be turned on/off. Temperature as well.
+
+ 13. Update and review all documents and directions to make sure they are
+     current and match the command line.
+
+X14. Fix the Makefile so that it doesn't need to be edited for different
+     targets (ie. the ds2490)
+
+X15. Need to update the digitemp.1 manpage.

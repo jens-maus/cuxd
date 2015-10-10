@@ -1,0 +1,49 @@
+#!/usr/bin/perl -w
+#
+# DigiTemp v2.1 RRDB database Creation
+#
+# Copyright 1997-2001 by Brian C. Lane <bcl@brianlane.com> www.brianlane.com
+# All Rights Reserved
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
+
+use Time::Local;
+use RRDp;
+
+RRDp::start "/usr/local/rrdtool/bin/rrdtool";
+
+# Create the database
+
+RRDp::cmd "create digitemp.rrd \
+DS:room:GAUGE:600:U:U  \ 
+DS:attic:GAUGE:600:U:U  \
+DS:desk:GAUGE:600:U:U   \
+RRA:AVERAGE:0.5:1:600    \  
+RRA:AVERAGE:0.5:6:700    \  
+RRA:AVERAGE:0.5:24:775   \  
+RRA:AVERAGE:0.5:288:797  \  
+RRA:MIN:0.5:1:600        \  
+RRA:MIN:0.5:6:700        \  
+RRA:MIN:0.5:24:775       \  
+RRA:MIN:0.5:288:797      \
+RRA:MAX:0.5:1:600        \  
+RRA:MAX:0.5:6:700        \  
+RRA:MAX:0.5:24:775       \  
+RRA:MAX:0.5:288:797";
+
+$answer = RRDp::read;
+#print $$answer;
+
+RRDp::end;

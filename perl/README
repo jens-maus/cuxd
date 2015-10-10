@@ -1,0 +1,70 @@
+Digitemp v2.6
+Copyright 1996-2002 by Brian C. Lane <bcl@brianlane.com>
+
+
+Here are a few useful perl scripts for you to use with DigiTemp. Most of
+them need customization for your specific circumstances. Some these scripts
+are old, as I now use the RRD tool to graph and log data.
+
+The digitemp_sql.pl script is new, and has not been tested extensivly yet,
+but should work for users familiar with the MySQL database system.
+
+
+inc_temp	Build a file suitable for including into a server side
+		include webpage (or modify it to create the whole webpage.
+		This script operates on a logfile output from digitemp when
+		running with the -l option.
+
+rem_temp	Create an include file as in inc_temp and then send it to
+		a server via FTP.
+		This script operates on a logfile output from digitemp when
+		running with the -l option.
+
+maxplot		Create a GIF image of the temperature graph.
+		This script operates on a logfile output from digitemp when
+		running with the -l option.
+
+check_digitemp.pl
+		This is a NetSaint/Nagios (www.nagios.com) script that uses
+		DigiTemp to check temperatures on monitored machines.
+
+digitemp_sql.pl	MySQL database logging of temperatures.
+
+		This is a new script, it logs the serial number and temperature
+		in Fahrenheit to a MySQL database. I assume that you are
+		familiar with the care and feeding of your database so that I
+		can skip over the simple stuff and get to the point:
+
+		Create a new database named digitemp:
+		mysqladmin create digitemp -u root -p
+
+		Edit the grant_mysql.sql file and change the password and
+		optionally the username. Grant access to the new database:
+
+		mysql mysql -u root -p < mysql_grant.sql
+
+		Create the database table:
+
+		mysql digitemp -u root -p < make_mysql.sql
+
+		Edit the digitemp_mysql.pl script. Change the password to the
+		one you used above, optionally change the username.
+		Point the digitemp_rcfile variable to the DigiTemp config file
+		that you have previously created using digitemp -i -c rcfile
+
+		I recommend using one other than .digitemprc so that it isn't
+		accidently erased when you run digitemp -i from your home
+		directory.
+
+		Make sure the path to the digitemp binary is correct. It is
+		specified by the $digitemp_binary variable.
+
+		Setup a cron job to log temperatures to the database at
+		regular intervals:
+
+		*/5 * * * *   /home/brian/bin/digitemp_mysql.pl
+
+		At this time I have not written any logging or graphing
+		scripts to deal with the MySQL temperature data.
+
+

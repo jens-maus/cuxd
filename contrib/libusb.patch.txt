@@ -1,0 +1,171 @@
+--------------070507070300030101020103
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 7bit
+
+I've successfully used the driver found in main PDK archive 
+(owpd300b2.zip) under generic library using usblnk.c and usbses.lnk. 
+This driver in turn uses libusb library found on the internet.
+
+I've found libusb v0.1.7, which contained a small bug in linux.c file. 
+The fixed routine is below.
+
+int usb_bulk_read(usb_dev_handle *dev, int ep, char *bytes, int size,
+    int timeout)
+{
+  struct usb_bulktransfer bulk;
+  int ret, retrieved = 0, requested;
+
+  /* Ensure the endpoint address is correct */
+  ep |= USB_ENDPOINT_IN;
+
+  do {
+    bulk.ep = ep;
+    requested = size - retrieved;
+    if (requested > MAX_READ_WRITE)
+      requested = MAX_READ_WRITE;
+    bulk.len = requested;
+    bulk.timeout = timeout;
+    bulk.data = (unsigned char *)bytes + retrieved;
+
+    ret = ioctl(dev->fd, IOCTL_USB_BULK, &bulk);
+    if (ret < 0)
+      USB_ERROR_STR(ret, "error reading from bulk endpoint 0x%x: %s",
+    ep, strerror(errno));
+
+    retrieved += ret;
+  } while (ret > 0 && retrieved < size); /* Yefim: && ret == requested */
+
+  return retrieved;
+}
+
+Best regards,
+
+Mike.
+
+bcl wrote:
+
+>On Wed, Jul 23, 2003 at 05:57:50AM -0400, Paul Alfille wrote:
+>  
+>
+>>Has anyone written a driver for the DS9490 USB master for Linux?
+>>
+>>I will try if it hasn't been done, but it's not my area of expertise.
+>>
+>>    
+>>
+>
+>Not yet (to my knowledge), although I am trying to make the time to get
+>started on the project. 
+>
+>Brian
+>
+>  
+>
+
+--------------070507070300030101020103
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+  
+  
+
+I've successfully used the driver found in main PDK archive (owpd300b2.zip)
+under generic library using usblnk.c and usbses.lnk. This driver in turn
+uses libusb library found on the internet.
+
+
+
+I've found libusb v0.1.7, which contained a small bug in linux.c file. The
+fixed routine is below.
+
+
+
+int usb_bulk_read(usb_dev_handle *dev, int ep, char *bytes, int size,
+
+    int timeout)
+
+{
+
+  struct usb_bulktransfer bulk;
+
+  int ret, retrieved = 0, requested;
+
+
+
+  /* Ensure the endpoint address is correct */
+
+  ep |= USB_ENDPOINT_IN;
+
+
+
+  do {
+
+    bulk.ep = ep;
+
+    requested = size - retrieved;
+
+    if (requested > MAX_READ_WRITE)
+
+      requested = MAX_READ_WRITE;
+
+    bulk.len = requested;
+
+    bulk.timeout = timeout;
+
+    bulk.data = (unsigned char *)bytes + retrieved;
+
+
+
+    ret = ioctl(dev->fd, IOCTL_USB_BULK, &bulk);
+
+    if (ret < 0)
+
+      USB_ERROR_STR(ret, "error reading from bulk endpoint 0x%x: %s",
+
+    ep, strerror(errno));
+
+
+
+    retrieved += ret;
+
+  } while (ret > 0 && retrieved < size); /* Yefim: &&
+ret == requested */
+
+
+
+  return retrieved;
+
+}
+
+
+
+Best regards,
+
+
+
+Mike.
+
+
+
+bcl wrote:
+
+>On Wed, Jul 23, 2003 at 05:57:50AM -0400, Paul Alfille wrote:
+>  
+>
+>>Has anyone written a driver for the DS9490 USB master for Linux?
+>>
+>>I will try if it hasn't been done, but it's not my area of expertise.
+>>
+>>    
+>>
+>
+>Not yet (to my knowledge), although I am trying to make the time to get
+>started on the project. 
+>
+>Brian
+>
+>  
+>
+

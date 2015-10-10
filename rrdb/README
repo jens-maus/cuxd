@@ -1,0 +1,29 @@
+  DigiTemp v2.4 rrdb scripts
+  Copyright 1999-2002 by Brian C. Lane <bcl@brianlane.com> www.brianlane.com
+  All Rights Reserved
+
+  The Round Robin Database is a great way to store data that you want to
+  graph. You can get it from:
+    http://ee-staff.ethz.ch/~oetiker/webtools/rrdtool/
+
+  log_temps calls digitemp and adds the current temperature readings to the
+  RRD database. It should be called from a crontab at regular intervals.
+
+  log-temperature.pl is a Perl script that runs digitemp and inserts the
+  new samples into the RRDB, optionally it can create a text file for use
+  in an email signature.
+
+  make_temps creates a RRD database suitable for logging 3 sensors of data.
+
+  temp-all.cgi
+  temp-one.cgi are scripts to generate .png graphs of temperature data.
+  Insert them into your webpage with: <IMG SRC="temp-all.cgi">
+
+  temp-minmax.cgi generates a graph with minimum and maximum printed on the
+  graph.
+
+  The suggested initialization sets up digitemp to output the temperature in
+  Centigrade and the conversion to Fahrenheit. The -o option passed to
+  digitemp when it is initalized controls how the temperature is output.
+
+

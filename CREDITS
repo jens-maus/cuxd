@@ -1,0 +1,43 @@
+Brian C. Lane <bcl@brianlane.com>
+Original DigiTemp code, and editor of submitted patches
+
+Erik Rigtorp <erkki@linx.nu>
+Developed the ds9097 code for the owpd kit.
+
+Jesus Roncero <jesus@roncero.org>
+Debian package maintainer
+Hub search fixes
+Manpage
+
+Eric Wilde
+DS2438 Humidity support
+
+Sven Geggus 
+-n0 infinite loop
+
+Ewan Leith
+AIX Support
+
+Roland Roberts
+DS1822 and DS18B20 changes
+
+Ted Frohling
+1-wire hub loan
+
+John Stoffel
+Solaris, AIX, FreeBSD patches
+
+Erik Rigtorp
+userial driver for passive DS9097 adapter
+
+Kevin Pedigo
+Makefile cleanup
+
+Peter Enderborg
+sleep change
+
+Måns Nilsson
+OpenBSD
+
+
+(need to add more names here)

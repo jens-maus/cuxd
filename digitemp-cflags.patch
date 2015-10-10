@@ -1,0 +1,11 @@
+--- digitemp-3.6.0/Makefile	2008-08-28 14:43:35.000000000 -0700
++++ digitemp-3.6.0/Makefile.rpm	2008-08-28 14:46:06.000000000 -0700
+@@ -12,7 +12,7 @@
+ VERSION = 3.6.0
+ 
+ CC	= gcc
+-CFLAGS	= -I./src -I./userial -O2 -Wall # -g
++CFLAGS	= -I./src -I./userial  $(RPM_OPT_FLAGS)
+ 
+ OBJS		=	src/digitemp.o src/device_name.o src/ds2438.o
+ HDRS		= 	src/digitemp.h src/device_name.h
