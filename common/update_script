@@ -59,18 +59,5 @@ ln -sf $ADDON_DIR $CONFIG_DIR/addons/www/cuxd
 # sync filesystem to make sure all changes are written to disk
 sync
 
-if [ "$1" = "" ]; then
-  echo "CCU1"
-  lcdtool "completed  CUxD       "
-  lcdtool "Reboot...             "
-  lcdtool -a 0x40 -t bin 00
-  echo "x" > /dev/watchdog
-  reboot
-  while true ; do true ;  done
-elif [ "$1" = "CCU2" ]; then
-  echo "CCU2"
-  # CCU2 always reboots after Addon/Firmware Update
-elif [ "$1" = "HM-RASPBERRYMATIC" ]; then
-  echo "HM-RASPBERRYMATIC"
-  # RASPBERRYMATIC always reboots after Addon/Firmware Update
-fi
+# all CCUs perform a reboot after installing
+# addons via WebUI.
