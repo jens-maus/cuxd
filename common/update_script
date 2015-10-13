@@ -37,15 +37,6 @@ cp -af $ADDON_DIR/cuxd.ps $ADDON_DIR/cuxd.ps.old
 # copy platform independent addon stuff
 cp -R cuxd/* $ADDON_DIR/
 
-# copy platform dependent addon stuff
-if [ "$1" == "" ]; then
-  cp -R ccu1/cuxd/* $ADDON_DIR/
-elif [ "$1" == "CCU2" ]; then
-  cp -R ccu2/cuxd/* $ADDON_DIR/
-elif [ "$1" == "HM-RASPBERRYMATIC" ]; then
-  cp -R ccupi/cuxd/* $ADDON_DIR/
-fi
-
 # copy startup script
 cp rc.d/cuxdaemon $RCD_DIR/
 chmod +x $RCD_DIR/cuxdaemon
