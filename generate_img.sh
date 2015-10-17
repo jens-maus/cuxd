@@ -20,4 +20,4 @@ generate_pkg()
 # generate all packages now.
 generate_pkg ccu1
 generate_pkg ccu2
-generate_pkg ccupi
+generate_pkg ccurm
