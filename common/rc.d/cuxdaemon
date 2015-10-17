@@ -21,7 +21,7 @@ case "$1" in
     if [ "$PSPID" = "" ]; then
       modprobe ehci_hcd
       chmod 0755 $CUXDIR/cuxd
-      $CUXDIR/cuxd -r$CUXDIR/ >/dev/null 2>&1
+      $CUXDIR/cuxd >/dev/null 2>&1
       logger -t homematic -p user.info "started cux-daemon"
     fi
   ;;
@@ -51,7 +51,7 @@ case "$1" in
       fi
     fi
     chmod 0755 $CUXDIR/cuxd
-    $CUXDIR/cuxd -r$CUXDIR/ >/dev/null 2>&1
+    $CUXDIR/cuxd >/dev/null 2>&1
     logger -t homematic -p user.info "started (restart) cux-daemon"
   ;;
 

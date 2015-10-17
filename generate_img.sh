@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # function that generate a CCU specific
 # install package
