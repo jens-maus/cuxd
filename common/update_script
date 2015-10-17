@@ -4,18 +4,13 @@ ADDON_DIR=/usr/local/addons/cuxd
 RCD_DIR=/usr/local/etc/config/rc.d
 CONFIG_DIR=/usr/local/etc/config
 
-if [ "$1" == "" ]; then
-  echo "CCU1"
-  lcdtool "installing CUxD         "
-  mount -t yaffs /dev/mtdblock3 /usr/local
-elif [ "$1" == "CCU2" ]; then
-  echo "CCU2"
-  mount -t ubifs ubi1:user /usr/local
-elif [ "$1" == "HM-RASPBERRYMATIC" ]; then
-  echo "HM-RASPBERRYMATIC"
+# mount /usr/local if not already mounted
+mount | grep /usr/local 2>&1 >/dev/null
+if [ $? -eq 1 ]; then
   mount /usr/local
 fi
 
+# make sure the addon and rc.d dir exist
 mkdir -p $ADDON_DIR
 chmod 755 $ADDON_DIR
 mkdir -p $RCD_DIR
@@ -52,3 +47,4 @@ sync
 
 # all CCUs perform a reboot after installing
 # addons via WebUI.
+exit 0
