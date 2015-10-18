@@ -1,5 +1,5 @@
 # CUx-Daemon
-This repository hosts the CCU-Addon build environment for the CUx-Daemon (CUxD) project (www.cuxd.de) which provides a universal interface between the HomeMatic/CCU layer (ReGa HSS) and third-party external and virtual devices.
+This repository hosts the CCU-Addon build environment for the CUx-Daemon (CUxD) project (http://cuxd.de) which provides a universal interface between the HomeMatic/CCU layer (ReGa HSS) and third-party external and virtual devices.
 
 ## Supported CCU Devices
 An installation of the CUxD Addon is currently supported on the following CCU devices:
