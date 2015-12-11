@@ -670,6 +670,7 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='0'$selected$>Transform</option>
 <option value='1'$selected$>State</option>
 <option value='2'$selected$>Thermostat</option>
+<option value='3'$selected$>LED16</option>
 </select><br><br>
 |
 ##48
@@ -685,10 +686,10 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='0'$selected$>1. PioTek Tracker</option>
 <option value='1'$selected$>2. Thermo (A5-02-xx)</option>
 <option value='2'$selected$>3. Thermo/Hygro (A5-04-01)</option>
-<option value='3'$selected$>4. Bewegungsmelder (A5-08-xx)</option>
+<option value='3'$selected$>4. Bewegungsmelder (A5-07-xx, A5-08-xx)</option>
 <option value='4'$selected$>5. Helligkeitssensor (A5-06-xx)</option>
 <option value='5'$selected$>6. Wetterstation (A5-13-xx)</option>
-<option value='6'$selected$>7. Raumtemperaturfuehler (A5-10-0x)</option>
+<option value='6'$selected$>7. Raumtemperaturfuehler (A5-10-xx)</option>
 </select><br><br>
 |
 ##50
@@ -803,5 +804,22 @@ Ger&auml;t:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 |
 Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='0'$selected$>Raumthermostat</option>
+<option value='1'$selected$>Raumthermostat (virtuell)</option>
 </select><br><br>
+|
+##64
+|
+<html>
+<head><title>virtual rooms</title></head>
+<body>
+<div style='font-family:arial;position:absolute;'>
+<div id='process' style='position:absolute;left:0px;top:0px;height:100%;width:100%;opacity:0.7;z-index:-1'></div>
+<form onSubmit="var docstyle=document.getElementById('process').style;docstyle.zIndex=99;docstyle.background='#fff url(ajax.gif) no-repeat center';return true;">
+|
+##65
+|
+</form>
+</div>
+</body>
+</html>
 |
