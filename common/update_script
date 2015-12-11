@@ -40,6 +40,7 @@ chmod +x $RCD_DIR/cuxdaemon
 ln -sf $ADDON_DIR $CONFIG_DIR/addons/www/cuxd
 
 # add menu
+touch /usr/local/etc/config/hm_addons.cfg
 $ADDON_DIR/update_addon cuxd $ADDON_DIR/cuxd_addon.cfg
 
 # sync filesystem to make sure all changes are written to disk
