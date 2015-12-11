@@ -17,7 +17,14 @@ generate_pkg()
   rm -rf tmp
 }
 
-# generate all packages now.
-#generate_pkg ccu1
-#generate_pkg ccu2
-generate_pkg ccurm
+# generate packages now. If specified on 
+# command-line generate this specific package
+# only. If not specified at all, generate all
+# packages.
+if [ -n "$1" ]; then
+  generate_pkg $1
+else
+  generate_pkg ccu1
+  generate_pkg ccu2
+  generate_pkg ccurm
+fi
