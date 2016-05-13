@@ -685,7 +685,7 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='0'$selected$>1. PioTek Tracker</option>
 <option value='1'$selected$>2. Thermo (A5-02-xx)</option>
-<option value='2'$selected$>3. Thermo/Hygro (A5-04-01)</option>
+<option value='2'$selected$>3. Thermo/Hygro (A5-04-0x)</option>
 <option value='3'$selected$>4. Bewegungsmelder (A5-07-xx, A5-08-xx)</option>
 <option value='4'$selected$>5. Helligkeitssensor (A5-06-xx)</option>
 <option value='5'$selected$>6. Wetterstation (A5-13-xx)</option>
