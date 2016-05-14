@@ -670,7 +670,6 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='0'$selected$>Transform</option>
 <option value='1'$selected$>State</option>
 <option value='2'$selected$>Thermostat</option>
-<option value='3'$selected$>LED16</option>
 </select><br><br>
 |
 ##48
