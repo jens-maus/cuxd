@@ -12,7 +12,7 @@ generate_pkg()
   cp -a common/* tmp/
   cp -a ${1}/cuxd tmp/
   cd tmp
-  tar --owner=root --group=root -czvf ../cuxd_$(cat ../VERSION)_${1}.tar.gz *
+  tar --owner=root --group=root --exclude=.DS_Store -czvf ../cuxd_$(cat ../VERSION)_${1}.tar.gz *
   cd ..
   rm -rf tmp
 }
