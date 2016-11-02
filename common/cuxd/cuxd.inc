@@ -689,6 +689,7 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='4'$selected$>5. Helligkeitssensor (A5-06-xx)</option>
 <option value='5'$selected$>6. Wetterstation (A5-13-xx)</option>
 <option value='6'$selected$>7. Raumtemperaturfuehler (A5-10-xx)</option>
+<option value='7'$selected$>8. Multifunktions-Sensor (A5-14-xx)</option>
 </select><br><br>
 |
 ##50

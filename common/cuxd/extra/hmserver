@@ -1,6 +1,6 @@
 #!/bin/tclsh
 #
-# (C) '2014 by Uwe Langhammer
+# (C) '2014-2016 by Uwe Langhammer
 # script for enabling/disabling the Java HMServer process
 #
 # usage: hmserver 0|1
@@ -12,11 +12,16 @@ if {$mode != 0 && $mode != 1} {
   puts "usage: hmserver.tcl 0|1"
   exit 1
 }
-set startscript "/etc/init.d/S61HMServer"
-if {![file isfile $startscript]} {
-  puts "$startscript not found!"
+
+foreach startscript [glob -nocomplain /etc/init.d/*HMServer] {
+  break
+}
+
+if {![info exists startscript] } {
+  puts "HMServer startscript not found!"
   exit 1
 }
+
 set fp [open $startscript r]
 set file_data [read $fp]
 set data [split $file_data "\n"]
@@ -34,6 +39,7 @@ if { $mode == 0 } {
   puts "##   - Gruppenfunktion (bei Heizungsthermostaten)                            ##"
   puts "##   - Erstinitialisierung der SD-Karte                                      ##"
   puts "##   - Geraetefirmwareupdate ueber WebUI                                     ##"
+  puts "##   - HomeMatic-IP Interface                                                ##"
   puts "##                                                                           ##"
   puts "###############################################################################"
   puts ""
