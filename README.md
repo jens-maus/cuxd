@@ -1,5 +1,4 @@
-<img src="https://github.com/jens-maus/cuxd/raw/master/docs/cuxd.png" align=right>
-# CUx-Daemon
+# &nbsp;![CUx-Daemon](https://github.com/jens-maus/cuxd/raw/master/docs/cuxd.png)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PRZ6MMMLY44RE)
 [![Build Status](https://travis-ci.org/jens-maus/cuxd.svg?branch=master)](https://travis-ci.org/jens-maus/cuxd)
 [![Code Climate](https://codeclimate.com/github/jens-maus/cuxd/badges/gpa.svg)](https://codeclimate.com/github/jens-maus/cuxd)
