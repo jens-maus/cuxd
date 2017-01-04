@@ -19,7 +19,7 @@ case "$1" in
       mount -o remount,ro /
     fi
     if [ "$PSPID" = "" ]; then
-      modprobe ehci_hcd
+      modprobe ehci_hcd 2>/dev/null
       chmod 0755 $CUXDIR/cuxd
       $CUXDIR/cuxd >/dev/null 2>&1
       logger -t homematic -p user.info "started cux-daemon"
