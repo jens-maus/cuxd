@@ -10,6 +10,7 @@ export LD_LIBRARY_PATH=$CUXDIR
 
 case "$1" in
   ""|start)
+    echo -n "Starting CUxD: "
     if [ ! -h $CONFIG_DIR/addons/www/cuxd ]; then
       ln -sf $CUXDIR $CONFIG_DIR/addons/www/cuxd
     fi
@@ -24,9 +25,11 @@ case "$1" in
       $CUXDIR/cuxd >/dev/null 2>&1
       logger -t homematic -p user.info "started cux-daemon"
     fi
+    echo "OK"
   ;;
 
   stop)
+    echo -n "Stopping CUxD: "
     if [ "$PSPID" != "" ]; then
       kill -TERM $PSPID 2>/dev/null
       sleep 1
@@ -37,9 +40,11 @@ case "$1" in
       fi
       logger -t homematic -p user.info "stopped cux-daemon"
     fi
+    echo "OK"
   ;;
 
   restart)
+    echo -n "Restarting CUxD: "
     if [ "$PSPID" != "" ]; then
       kill -HUP `cat $PIDFILE` 2>/dev/null
       logger -t homematic -p user.info "stopped (restart) cux-daemon"
@@ -53,6 +58,7 @@ case "$1" in
     chmod 0755 $CUXDIR/cuxd
     $CUXDIR/cuxd >/dev/null 2>&1
     logger -t homematic -p user.info "started (restart) cux-daemon"
+    echo "OK"
   ;;
 
   info)
