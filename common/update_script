@@ -24,6 +24,7 @@ rm -f $ADDON_DIR/*.ccc
 rm -f $ADDON_DIR/hm_addons.cfg.*
 rm -f $ADDON_DIR/cuxd_addon.cfg
 rm -f $ADDON_DIR/cuxd
+rm -f $ADDON_DIR/extra/curl
 rm -f $CONFIG_DIR/addons/www/cuxd
 
 # save current configuration
