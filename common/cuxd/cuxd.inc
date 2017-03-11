@@ -793,7 +793,7 @@ Period:<input type="text" name="period" size="3" value="168" \>\
 ##61
 |
 Ger&auml;t:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
-<option value='0'$selected$>1. FFD-EnergyCam</option>
+<option value='0'$selected$>1. EnergyCam/iPERL</option>
 </select><br><br>
 |
 ##62

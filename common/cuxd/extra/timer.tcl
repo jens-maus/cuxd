@@ -3,7 +3,7 @@
 # Schaltet nach vorgegebener Zeit einen Kanal Ein oder Aus oder ändert einen Wert
 # =============================================================
 # von MaxWrestler 2012
-# Update 2015 - Uwe Langhammer
+# Update 2017 - Uwe Langhammer
 #
 # Aufruf zB.
 # /usr/local/addons/cuxd/extra/timer.tcl BidCos-RF.IEQ0504341:1.STATE 1 10
@@ -30,9 +30,10 @@ proc getopt {_argv name {_var ""}} {
 
 set querystate [getopt argv -s]
 set verbose [getopt argv -v]
+set ms [getopt argv -ms]
 
 if { $argc < 1 } {
-  puts "USAGE: timer.tcl \[-v\] \[-s\] <interface.address:ch.DP> \[<STATE>\] \[<WAIT in X.XXs>\] \[<COMPARE>\] \[<ON_TIME>\]"
+  puts "USAGE: timer.tcl \[-v\] \[-s\] \[-ms\] <interface.address:ch.DP> \[<STATE>\] \[<WAIT_TIME>\] \[<COMPARE>\] \[<ON_TIME>\] \[<RAMP_TIME>\]"
   exit 1
 }
 
@@ -41,6 +42,7 @@ set state [lindex $argv 1]
 set wait_in_seconds [lindex $argv 2]
 set check_value [lindex $argv 3]
 set set_ontime [lindex $argv 4]
+set set_ramptime [lindex $argv 5]
 
 if { $querystate } {
   set querystate "State()"
@@ -65,6 +67,7 @@ if { $argc < 2 } {
 } else {
 
   if {[string is double $wait_in_seconds] && ($wait_in_seconds > 0)} {
+    if { $ms } { set wait_in_seconds [expr $wait_in_seconds / 1000.0] }
     puts "WAIT ${wait_in_seconds}s"
     set wait_in_1000s [expr $wait_in_seconds * 1000]
     after [expr int($wait_in_1000s)]
@@ -75,9 +78,17 @@ if { $argc < 2 } {
   }
 
   if {[string is double $set_ontime] && ($set_ontime > 0)} {
+    if { $ms } { set set_ontime [expr $set_ontime / 1000.0] }
     puts "ON_TIME ${set_ontime}s"
     regsub -- {[^\.]+$} $address "ON_TIME" ontime
     append cmd "dom.GetObject(\"$ontime\").State(\"$set_ontime\");"
+  }
+
+  if {[string is double $set_ramptime] && ($set_ramptime > 0)} {
+    if { $ms } { set set_ramptime [expr $set_ramptime / 1000.0] }
+    puts "RAMP_TIME ${set_ramptime}s"
+    regsub -- {[^\.]+$} $address "RAMP_TIME" ramptime
+    append cmd "dom.GetObject(\"$ramptime\").State(\"$set_ramptime\");"
   }
  
   append cmd "dom.GetObject(\"$address\").State(\"$state\");"
