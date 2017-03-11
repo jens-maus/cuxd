@@ -23,14 +23,18 @@ rm -f $ADDON_DIR/lib*.so*
 rm -f $ADDON_DIR/*.ccc
 rm -f $ADDON_DIR/hm_addons.cfg.*
 rm -f $ADDON_DIR/cuxd_addon.cfg
-rm -f $ADDON_DIR/cuxd
 rm -f $ADDON_DIR/extra/curl
+
+# remove daemon
+rm -f $ADDON_DIR/cuxd
+
+# remove link to website
 rm -f $CONFIG_DIR/addons/www/cuxd
 
 # save current configuration
 cp -af $ADDON_DIR/cuxd.ps $ADDON_DIR/cuxd.ps.old
 
-# copy addon stuff
+# copy addon
 cp -R cuxd/* $ADDON_DIR/
 
 # copy startup script
