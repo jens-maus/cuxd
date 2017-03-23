@@ -24,6 +24,8 @@ rm -f $ADDON_DIR/*.ccc
 rm -f $ADDON_DIR/hm_addons.cfg.*
 rm -f $ADDON_DIR/cuxd_addon.cfg
 rm -f $ADDON_DIR/extra/curl
+rm -f $ADDON_DIR/extra/socat
+rm -f $ADDON_DIR/libusb-1.0.*
 
 # remove daemon
 rm -f $ADDON_DIR/cuxd
@@ -32,7 +34,9 @@ rm -f $ADDON_DIR/cuxd
 rm -f $CONFIG_DIR/addons/www/cuxd
 
 # save current configuration
-cp -af $ADDON_DIR/cuxd.ps $ADDON_DIR/cuxd.ps.old
+if [ -f "$ADDON_DIR/cuxd.ps" ]; then
+  cp -af $ADDON_DIR/cuxd.ps $ADDON_DIR/cuxd.ps.old
+fi
 
 # copy addon
 cp -R cuxd/* $ADDON_DIR/
