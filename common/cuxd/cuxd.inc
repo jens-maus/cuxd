@@ -447,10 +447,11 @@ function confirm_device(dtype,dtype2) {
 |
 ##23
 |
-<div style='width:100%%;border:0px;text-align:center;font-family:arial;font-size:13px;color:black;margin-top:0px;margin-bottom:1px;font-weight:bold;'>
-Abgeschlossen<br>
-</div>
-<br><br><br>
+|<br><div style='width:100%%;border:0px;text-align:center;font-family:arial;font-size:13px;color:black;margin-top:0px;margin-bottom:1px;font-weight:bold;'>
+|Abgeschlossen<br>
+|</div>
+|<br>
+<br><br>
 <a href='%s?m=55' target='_blank'>Ansehen/Download Firmware-Update Log</a>
 |
 ##24
@@ -712,6 +713,7 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 |
 Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='0'$selected$>1. Schaltaktor (1-Kanal)</option>
+<option value='1'$selected$>2. SODA Funk-Alarmgriff</option>
 </select><br><br>
 |
 ##53
