@@ -333,7 +333,10 @@ foreach (c,root.Channels().EnumUsedIDs()){
     ret = c2.Name() # '|' # c1.Address() # '|' # c1.HssType() # '|';
     string dp;
     foreach (dp,c1.DPs()) {
-      ret = ret # dom.GetObject(dp).HssType() # '|';
+	  var dpo = dom.GetObject(dp);
+	  if (dpo.TypeName() == "HSSDP") {	
+        ret = ret # dpo.HssType() # '|';
+	  }
     }
     Write(ret);
     quit;
