@@ -503,12 +503,14 @@ foreach (c,root.Channels().EnumUsedIDs()){
     string dp;
     string ret = c1.HssType() # ' ' # c;
 	var dpo;
-    foreach (dp,c1.DPs()) { dpo = dom.GetObject(dp); if (dpo.TypeName() == "HSSDP") {
-|    foreach (dp,c1.DPs().EnumUsedIDs()){ dpo = dom.GetObject(dp); if (dpo.TypeName() == "HSSDP") {
+    foreach (dp,c1.DPs()) { dpo = dom.GetObject(dp);
+|    foreach (dp,c1.DPs().EnumUsedIDs()){ dpo = dom.GetObject(dp);
 |      if (dpo.Operations() & OPERATION_WRITE) {
-      ret = ret # '|' # dpo.HssType() # ' ' # dp;
-|      }}
-    }}
+		if (dpo.TypeName() == "HSSDP") {
+			ret = ret # '|' # dpo.HssType() # ' ' # dp;
+		}
+|      }
+    }
     Write(c1.Address() # '|' # ret);
     quit;
   }
