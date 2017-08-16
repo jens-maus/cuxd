@@ -505,8 +505,8 @@ foreach (c,root.Channels().EnumUsedIDs()){
 	var dpo;
     foreach (dp,c1.DPs()) { dpo = dom.GetObject(dp); if (dpo.TypeName() == "HSSDP") {
 |    foreach (dp,c1.DPs().EnumUsedIDs()){ dpo = dom.GetObject(dp); if (dpo.TypeName() == "HSSDP") {
-|      if (dom.GetObject(dp).Operations() & OPERATION_WRITE) {
-      ret = ret # '|' # dom.GetObject(dp).HssType() # ' ' # dp;
+|      if (dpo.Operations() & OPERATION_WRITE) {
+      ret = ret # '|' # dpo.HssType() # ' ' # dp;
 |      }}
     }}
     Write(c1.Address() # '|' # ret);
