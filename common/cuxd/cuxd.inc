@@ -502,12 +502,13 @@ foreach (c,root.Channels().EnumUsedIDs()){
   if (c1.Address().Find('%s') != -1) {
     string dp;
     string ret = c1.HssType() # ' ' # c;
-    foreach (dp,c1.DPs()) {
-|    foreach (dp,c1.DPs().EnumUsedIDs()){
+	var dpo;
+    foreach (dp,c1.DPs()) { dpo = dom.GetObject(dp); if (dpo.TypeName() == "HSSDP") {
+|    foreach (dp,c1.DPs().EnumUsedIDs()){ dpo = dom.GetObject(dp); if (dpo.TypeName() == "HSSDP") {
 |      if (dom.GetObject(dp).Operations() & OPERATION_WRITE) {
       ret = ret # '|' # dom.GetObject(dp).HssType() # ' ' # dp;
-|      }
-    }
+|      }}
+    }}
     Write(c1.Address() # '|' # ret);
     quit;
   }
