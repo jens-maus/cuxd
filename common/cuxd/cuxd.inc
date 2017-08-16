@@ -333,7 +333,10 @@ foreach (c,root.Channels().EnumUsedIDs()){
     ret = c2.Name() # '|' # c1.Address() # '|' # c1.HssType() # '|';
     string dp;
     foreach (dp,c1.DPs()) {
-      ret = ret # dom.GetObject(dp).HssType() # '|';
+	  var dpo = dom.GetObject(dp);
+	  if (dpo.TypeName() == "HSSDP") {	
+        ret = ret # dpo.HssType() # '|';
+	  }
     }
     Write(ret);
     quit;
@@ -499,10 +502,13 @@ foreach (c,root.Channels().EnumUsedIDs()){
   if (c1.Address().Find('%s') != -1) {
     string dp;
     string ret = c1.HssType() # ' ' # c;
-    foreach (dp,c1.DPs()) {
-|    foreach (dp,c1.DPs().EnumUsedIDs()){
-|      if (dom.GetObject(dp).Operations() & OPERATION_WRITE) {
-      ret = ret # '|' # dom.GetObject(dp).HssType() # ' ' # dp;
+	var dpo;
+    foreach (dp,c1.DPs()) { dpo = dom.GetObject(dp);
+|    foreach (dp,c1.DPs().EnumUsedIDs()){ dpo = dom.GetObject(dp);
+|      if (dpo.Operations() & OPERATION_WRITE) {
+		if (dpo.TypeName() == "HSSDP") {
+			ret = ret # '|' # dpo.HssType() # ' ' # dp;
+		}
 |      }
     }
     Write(c1.Address() # '|' # ret);
