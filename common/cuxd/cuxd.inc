@@ -333,10 +333,10 @@ foreach (c,root.Channels().EnumUsedIDs()){
     ret = c2.Name() # '|' # c1.Address() # '|' # c1.HssType() # '|';
     string dp;
     foreach (dp,c1.DPs()) {
-	  var dpo = dom.GetObject(dp);
-	  if (dpo.TypeName() == "HSSDP") {	
+      var dpo = dom.GetObject(dp);
+      if (dpo.TypeName() == "HSSDP") {	
         ret = ret # dpo.HssType() # '|';
-	  }
+      }
     }
     Write(ret);
     quit;
@@ -502,13 +502,13 @@ foreach (c,root.Channels().EnumUsedIDs()){
   if (c1.Address().Find('%s') != -1) {
     string dp;
     string ret = c1.HssType() # ' ' # c;
-	var dpo;
+    var dpo;
     foreach (dp,c1.DPs()) { dpo = dom.GetObject(dp);
 |    foreach (dp,c1.DPs().EnumUsedIDs()){ dpo = dom.GetObject(dp);
 |      if (dpo.Operations() & OPERATION_WRITE) {
-		if (dpo.TypeName() == "HSSDP") {
-			ret = ret # '|' # dpo.HssType() # ' ' # dp;
-		}
+        if (dpo.TypeName() == "HSSDP") {
+          ret = ret # '|' # dpo.HssType() # ' ' # dp;
+        }
 |      }
     }
     Write(c1.Address() # '|' # ret);
@@ -697,6 +697,8 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='5'$selected$>6. Wetterstation (A5-13-xx)</option>
 <option value='6'$selected$>7. Raumtemperaturfuehler (A5-10-xx)</option>
 <option value='7'$selected$>8. Multifunktions-Sensor (A5-14-xx)</option>
+<option value='8'$selected$>9. Drehtaster (A5-38-08)</option>
+<option value='9'$selected$>10. Zaehlersensor (A5-12-0x)</option>
 </select><br><br>
 |
 ##50
@@ -713,6 +715,7 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='2'$selected$>3. Jalousieaktor (1-4 Kanal)</option>
 <option value='3'$selected$>4. IntesisBox</option>
 <option value='4'$selected$>5. MD15 Ventilantrieb</option>
+<option value='5'$selected$>6. Eltako FMP3 (16-Kanal)</option>
 </select><br><br>
 |
 ##52

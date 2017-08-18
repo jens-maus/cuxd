@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# DutyCycle Monitor start/stop script
+# (C) '2017 by Uwe Langhammer
+#
+PROCPATH=/usr/local/addons/cuxd/extra
+PROC=dutycycle.tcl
+
+FILENAME=/var/cache/cuxd_dutycycle.txt
+
+SLEEP=120
+if [ "$2" != "" ]
+then
+	SLEEP=$2
+fi
+
+PSPID=`ps -o pid,comm | grep -Ev "\b$$\b" | awk '{if($2=="'$PROC'"){print $1}}'`
+
+case "$1" in
+  start|restart|stop)
+  	if [ "$PSPID" != "" ]
+  	then
+  		kill -TERM $PSPID 2>/dev/null
+  		sleep 1
+  		logger $PROC[$PSPID] stopped
+  	fi
+  	
+        if [ "$1" != "stop" ]
+        then
+        	if [ -x "$PROCPATH/$PROC" ]
+        	then
+			$PROCPATH/$PROC $FILENAME $SLEEP &
+			logger $PROC[$!] $FILENAME $SLEEP started
+		else
+			logger $PROCPATH/$PROC not found!
+		fi
+	fi
+	;;
+
+  *)
+	echo "Usage: $0 {start|stop} [SLEEP]" >&2
+	exit 1
+	;;
+esac
+
+exit 0
