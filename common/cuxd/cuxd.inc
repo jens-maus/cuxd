@@ -488,7 +488,7 @@ function confirm_device(dtype,dtype2) {
 |
 <html>
 <head>
-<META HTTP-EQUIV='Refresh' CONTENT='%d;URL=%s?m=16'> 
+<meta http-equiv='REFRESH' content='%d;URL=%s?m=16'/> 
 </head>
 <body style='font-family:courier new;margin:0;padding:0;background-color:#ffffff'>
 <div style='border:1px;font-size:11px;background-color:#ffffff'>
@@ -831,6 +831,17 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 |
 </form>
 </div>
+</body>
+</html>
+|
+##66
+|
+<html>
+<head>
+<meta http-equiv="REFRESH" content="2;url=%s?m=%d&n=%d"/>
+</head>
+<body>
+<center><br><br>%s</center>
 </body>
 </html>
 |
