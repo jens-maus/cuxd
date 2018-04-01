@@ -1,8 +1,8 @@
 #!/bin/sh
 
 ADDON_DIR=/usr/local/addons/cuxd
-RCD_DIR=/usr/local/etc/config/rc.d
 CONFIG_DIR=/usr/local/etc/config
+RCD_DIR=$CONFIG_DIR/rc.d
 
 # mount /usr/local if not already mounted
 mount | grep /usr/local 2>&1 >/dev/null
@@ -30,6 +30,11 @@ rm -f $ADDON_DIR/libusb-1.0.*
 # remove daemon
 rm -f $ADDON_DIR/cuxd
 
+# disable debugging
+rm -f $ADDON_DIR/cuxd.dbg
+# enable debugging after installation "LOGLEVEL LOGFILE"
+#echo "10 /tmp/cuxddbglog.txt" >$ADDON_DIR/cuxd.dbg
+
 # remove link to website
 rm -f $CONFIG_DIR/addons/www/cuxd
 
@@ -39,21 +44,48 @@ if [ -f "$ADDON_DIR/cuxd.ps" ]; then
 fi
 
 # copy addon
-cp -R cuxd/* $ADDON_DIR/
+cp -af cuxd/* $ADDON_DIR/
 
 # copy startup script
-cp rc.d/cuxdaemon $RCD_DIR/
-chmod +x $RCD_DIR/cuxdaemon
+cp -af rc.d/* $RCD_DIR/
 
 # link to website
 ln -sf $ADDON_DIR $CONFIG_DIR/addons/www/cuxd
 
 # add menu
-touch /usr/local/etc/config/hm_addons.cfg
-$ADDON_DIR/update_addon cuxd $ADDON_DIR/cuxd_addon.cfg
+touch $CONFIG_DIR/hm_addons.cfg
+# $ADDON_DIR/update_addon cuxd $ADDON_DIR/cuxd_addon.cfg
+./update_addon cuxd cuxd_addon.cfg
 
-# sync filesystem to make sure all changes are written to disk
+# sync filesystems to make sure all changes are written to disk
 sync
+
+PSPID=`ps -o pid,comm | awk '{if($2=="ReGaHss"){print $1}}'`
+if [ "$PSPID" != "" ]
+then
+  if [ -f /etc/config/InterfacesList.xml ]
+  then
+    grep "<name>CUxD</name>" /etc/config/InterfacesList.xml
+    rc=$?
+
+    if [ $rc -ne 0 ]
+    then
+# stop ReGa
+      /etc/init.d/S??ReGaHss stop
+    fi
+
+# restart CUxD
+    $RCD_DIR/cuxdaemon stop
+    $RCD_DIR/cuxdaemon start
+
+    if [ $rc -ne 0 ]
+    then
+# start ReGa
+      /etc/init.d/S??ReGaHss start
+    fi
+
+  fi
+fi
 
 # all CCUs perform a reboot after installing
 # addons via WebUI.

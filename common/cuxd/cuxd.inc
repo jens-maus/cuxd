@@ -805,6 +805,7 @@ Period:<input type="text" name="period" size="3" value="168" \>\
 |
 Ger&auml;t:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='0'$selected$>1. EnergyCam/iPERL</option>
+<option value='1'$selected$>2. SMI260 Wechselrichter</option>
 </select><br><br>
 |
 ##62
