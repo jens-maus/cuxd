@@ -14,7 +14,14 @@ set HOSTNAME [exec hostname]
 set iso8601_date [exec date -Iseconds]
 regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+)$} $iso8601_date dummy year month day hour minute second zone
 set BACKUPDIR /var/tmp
-set VERSION [exec sed -e s/VERSION=//g /boot/VERSION]
+
+set VERSION 0
+set VERSION_FILE /VERSION
+if {![file exists $VERSION_FILE]} {
+  set VERSION_FILE /boot/VERSION
+}
+catch { set VERSION [exec grep VERSION= $VERSION_FILE | cut -d= -f2] }
+
 set BACKUPFILE [set HOSTNAME]-$VERSION-$year-$month-$day-$hour$minute.sbk
 if { $argc > 0 } {
   set BACKUPDIR [lindex $argv 0]
