@@ -25,7 +25,7 @@ An installation of the CUxD Addon is currently supported on the following CCU de
 
 ## Documentation
 
-Documentation in form of pdf files can be downloaded from the 'docs' subdirectory of this repository.
+Documentation in form of pdf files can be downloaded from http://cuxd.de.
 
 ## License
 
