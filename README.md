@@ -25,7 +25,7 @@ An installation of the CUxD Addon is currently supported on the following CCU de
 
 ## Documentation
 
-Documentation in form of pdf files can be downloaded from http://cuxd.de.
+Documentation in form of pdf files can be downloaded from https://homematic-forum.de/forum/viewtopic.php?f=37&t=15298.
 
 ## License
 
