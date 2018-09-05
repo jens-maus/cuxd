@@ -63,8 +63,10 @@ function set_selection(maint,val) {
 <a href="?file=/">File-Browser</a><br>
 <a href="?maintenance=9&cmd=ps -o ppid,pgid,pid,tty,user,vsz,stat,rss,args">Prozessliste</a><br>
 <a href="?maintenance=9&cmd=if [ ! -f  /etc/config/sshEnabled ];then touch /etc/config/sshEnabled;fi;/etc/init.d/S??sshd restart">restart SSH Dienst</a><br>
-<a href="?maintenance=9&cmd=/usr/local/addons/cuxd/extra/hmserver 0" onClick="return confirm('Java HM-Server deaktivieren!\n\n* A C H T U N G * A C H T U N G * A C H T U N G *\n\nEs werden u.a.  D E A K T I V I E R T :\n - Diagramme\n - Gruppen (bei Heizungsthermostaten)\n - Erstinitialisierung der SD-Karte\n - Gerätefirmwareupdate über WebUI\n - HomeMatic-IP Interface\n\nCCU-Neustart wird durchgeführt!')">Java HM-Server deaktivieren (CCU-Neustart erforderlich)</a><br>
-<a href="?maintenance=9&cmd=/usr/local/addons/cuxd/extra/hmserver 1" onClick="return confirm('Java HM-Server aktivieren!\nerfordert CCU-Neustart')">Java HM-Server aktivieren (CCU-Neustart erforderlich)</a><br>
+<a href="?maintenance=9&cmd=/usr/local/addons/cuxd/extra/ctl_startup 0 1 HMServer" onClick="return confirm('Java HM-Server deaktivieren!\n\n* A C H T U N G * A C H T U N G * A C H T U N G *\n\nEs werden u.a.  D E A K T I V I E R T :\n - Diagramme\n - Gruppen (bei Heizungsthermostaten)\n - Erstinitialisierung der SD-Karte\n - Gerätefirmwareupdate über WebUI\n - HomeMatic-IP Interface\n\nCCU-Neustart wird durchgeführt!')">Java HM-Server deaktivieren (CCU-Neustart erforderlich)</a><br>
+<a href="?maintenance=9&cmd=/usr/local/addons/cuxd/extra/ctl_startup 1 1 HMServer" onClick="return confirm('Java HM-Server aktivieren!\nerfordert CCU-Neustart')">Java HM-Server aktivieren (CCU-Neustart erforderlich)</a><br>
+<a href="?maintenance=9&cmd=/usr/local/addons/cuxd/extra/ctl_startup 0 1 rfd" onClick="return confirm('rfd deaktivieren!\nCCU-Neustart wird durchgeführt!')">rfd deaktivieren (CCU-Neustart erforderlich)</a><br>
+<a href="?maintenance=9&cmd=/usr/local/addons/cuxd/extra/ctl_startup 1 1 rfd" onClick="return confirm('rfd aktivieren!\nCCU-Neustart wird durchgeführt!')">rfd aktivieren (CCU-Neustart erforderlich)</a><br>
 <br>
 <b>Bitte w&auml;hlen:</b>
 <form action="index.ccc" target="_blank" onSubmit="return confirm_selection(this);">

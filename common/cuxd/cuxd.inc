@@ -255,7 +255,7 @@ Info
 </tr>
 </table>
 <div align='center' style='border:1px solid #aaaaaa;'>
-<iframe width='100%%' scrolling='auto' height='380' frameborder='0' style='padding:0px;' src='/addons/cuxd/index.ccc?m=20&lines=%d' name='cuxdoutput'>
+<iframe width='100%%' scrolling='auto' height='380' frameborder='0' style='padding:0px;' src='index.ccc?m=20&lines=%d' name='cuxdoutput'>
 </iframe>
 </div>
 </body>
@@ -282,7 +282,7 @@ Sende/Empfangs-Terminal
 </tr>
 </table>
 <div align='center' style='border:1px solid #aaaaaa;'>
-<iframe width='100%%' scrolling='no' height='380' frameborder='0' style='padding:0px;' src='/addons/cuxd/index.ccc?m=16' name='cuxdoutput'>
+<iframe width='100%%' scrolling='no' height='380' frameborder='0' style='padding:0px;' src='index.ccc?m=16' name='cuxdoutput'>
 </iframe>
 </div>
 </body>
@@ -536,7 +536,7 @@ foreach (c,root.Channels().EnumUsedIDs()){
 <td style='vertical-align:top'>
 <input type='submit' value='Ger&auml;t von CCU l&ouml;schen !' style='width:180px;font-family:arial;font-size:12px;' onClick='var si = dselect.selectedIndex;return(si != -1 && confirm("Ger&auml;t [CUX" + dselect.options[si].value + "] l&ouml;schen?"));'/>
 &nbsp;&nbsp;&nbsp;
-<input type='button' value='Ger&auml;t bearbeiten' style='width:180px;font-family:arial;font-size:12px;' onClick='var si = dselect.selectedIndex;if (si != -1) { parent.document.getElementById("left_table").innerHTML="<iframe width=\"100%%\" height=\"100%%\" src=\"/addons/cuxd/index.ccc?m=53&dev="+dselect.options[si].value+"\" name=\"devedit\" scrolling=\"no\" frameborder=\"0\" style=\"padding:0px;\"></iframe>";}'/>
+<input type='button' value='Ger&auml;t bearbeiten' style='width:180px;font-family:arial;font-size:12px;' onClick='var si = dselect.selectedIndex;if (si != -1) { parent.document.getElementById("left_table").innerHTML="<iframe width=\"100%%\" height=\"100%%\" src=\"index.ccc?m=53&dev="+dselect.options[si].value+"\" name=\"devedit\" scrolling=\"no\" frameborder=\"0\" style=\"padding:0px;\"></iframe>";}'/>
 </td></tr></table>
 |
 ##33
@@ -677,6 +677,7 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='0'$selected$>Transform</option>
 <option value='1'$selected$>State</option>
 <option value='2'$selected$>Thermostat</option>
+<option value='3'$selected$>LED16</option>
 </select><br><br>
 |
 ##48

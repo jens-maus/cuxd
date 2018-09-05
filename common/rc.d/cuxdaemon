@@ -100,6 +100,7 @@ case "$1" in
     if [ -d $CUXDIR ]
     then
       $CUXDIR/update_addon cuxd
+      $CUXDIR/extra/ctl_startup 2 rfd HMServer ReGaHss
       rm $CONFIG_DIR/addons/www/cuxd
       rm -rf $CUXDIR
     fi
