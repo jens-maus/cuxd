@@ -13,9 +13,9 @@ This repository hosts the CCU-Addon build environment for the CUx-Daemon (CUxD) 
 ## Supported CCU Devices
 
 An installation of the CUxD Addon is currently supported on the following CCU devices:
-* HomeMatic CCU1
+* HomeMatic CCU3 / RaspberryMatic
 * HomeMatic CCU2 / YAHM / LXCCU
-* RaspberryMatic
+* HomeMatic CCU1
 
 ## Installation
 
