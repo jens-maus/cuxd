@@ -51,6 +51,7 @@ HM-ES-PMSw1-Pl      93_hm-es-pmsw1-pl_thumb     Schaltaktor mit Leistungsmessung
 HM-LC-Bl1-FM        7_hm-lc-bl1-fm_thumb        Jalousieaktor 1fach Unterputz
 HM-LC-Bl1-SM        6_hm-lc-bl1-sm_thumb        Jalousieaktor 1fach Aufputz
 HM-LC-Bl1PBU-FM     PushButton-2ch-wm_thumb     Jalousieaktor 1fach Schalter
+HM-LC-Ja1PBU-FM     PushButton-2ch-wm_thumb     Jalousieaktor mit Lamellen
 
 HM-LC-Dim1T-FM      65_hm-lc-dim1t-fm_thumb     Dimmaktor 1fach Unterputz
 HM-LC-Dim2L-SM      45_hm-lc-dim2l-sm_thumb     Dimmaktor 2fach Aufputz
@@ -64,3 +65,5 @@ HM-EM-CCM           44_hm-em-ccm_thumb          Z&auml;hlersensor Kamera
 HM-OU-LED16         78_hm-ou-led16_thumb        Statusanzeige 16 Kanal
 HM-Sec-SD           51_hm-sec-sd_thumb          Rauchmelder
 HM-Sec-SD-Team      52_hm-sec-sd-team_thumb     Rauchmelder (Gruppe)
+HM-Sec-Key          14_hm-sec-key_thumb         KeyMatic
+

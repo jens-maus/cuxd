@@ -634,6 +634,7 @@ Firmware-Update gestartet:
 <option value='1'>1 Kanal</option>
 <option value='2'>2 Kanal</option>
 <option value='4'>4 Kanal</option>
+<option value='8'>8 Kanal</option>
 </select>
 |
 ##42
@@ -677,7 +678,6 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='0'$selected$>Transform</option>
 <option value='1'$selected$>State</option>
 <option value='2'$selected$>Thermostat</option>
-<option value='3'$selected$>LED16</option>
 </select><br><br>
 |
 ##48
@@ -724,6 +724,9 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='0'$selected$>1. Schaltaktor (1-Kanal)</option>
 <option value='1'$selected$>2. SODA Funk-Alarmgriff</option>
+<option value='2'$selected$>3. Omnio AWAG Schaltaktoren</option>
+<option value='3'$selected$>4. Omnio AWAG Dimmer</option>
+<option value='4'$selected$>5. Omnio AWAG Jalousieaktoren</option>
 </select><br><br>
 |
 ##53
@@ -783,6 +786,8 @@ Period:<input type="text" name="period" size="3" value="168" \>\
 <option value='4'>Gefahrenmelder</option>
 <option value='5'>Jalousie</option>
 <option value='6'>Dimmer</option>
+<option value='7'>Drehgriffkontakt</option>
+<option value='8'>KeyMatic</option>
 </select>
 |
 ##59
@@ -846,4 +851,11 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <center><br><br>%s</center>
 </body>
 </html>
+|
+##67
+|
+<br><br>Option:&nbsp;<select name='dcontrol' size='1'>
+<option value='1'>1 Kanal</option>
+<option value='4'>4 Kanal</option>
+</select>
 |

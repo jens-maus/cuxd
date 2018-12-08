@@ -26,5 +26,5 @@ if [ -n "$1" ]; then
 else
   generate_pkg ccu1
   generate_pkg ccu2
-  generate_pkg ccurm
+  generate_pkg ccu3
 fi

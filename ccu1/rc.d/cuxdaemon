@@ -1,0 +1,77 @@
+#!/bin/sh
+CUXDIR=/usr/local/addons/cuxd
+CONFIG_URL=/addons/cuxd/index.ccc
+PIDFILE=/var/run/cuxd.pid
+export LD_LIBRARY_PATH=/usr/local/addons/cuxd
+export CURL_CA_BUNDLE=$CUXDIR/extra/cacert.pem
+
+case "$1" in
+  ""|start)
+	if [ ! -h /usr/local/etc/config/addons/www/cuxd ] 
+	then ln -sf /usr/local/addons/cuxd /usr/local/etc/config/addons/www/cuxd
+	fi
+        if [ -f /usr/local/addons/cuxd/cuxd.ini ]
+        then
+          grep -v "^HM-SCRIPTHOST=\|^HM-SCRIPTPORT=\|^HM-REGAPORT=" /usr/local/addons/cuxd/cuxd.ini >/tmp/cuxd.ini
+          diff -q /usr/local/addons/cuxd/cuxd.ini /tmp/cuxd.ini >/dev/null
+          if [ $? -ne 0 ]
+          then mv /tmp/cuxd.ini /usr/local/addons/cuxd/cuxd.ini
+          fi
+        fi
+	chmod 0755 $CUXDIR/cuxd
+	$CUXDIR/cuxd >/dev/null 2>&1
+	logger -t homematic -p user.info "started cux-daemon"
+	;;
+
+  stop)
+	kill -TERM `cat $PIDFILE` 2>/dev/null
+	sleep 1
+	kill -0 `cat $PIDFILE` 2>/dev/null
+	if [ $? = 0 ]
+	then
+	  sleep 10
+	  kill -KILL `cat $PIDFILE` 2>/dev/null
+	fi
+	logger -t homematic -p user.info "stopped cux-daemon"
+	;;
+
+  restart)
+	kill -HUP `cat $PIDFILE` 2>/dev/null
+	logger -t homematic -p user.info "stopped (restart) cux-daemon"
+	sleep 1
+	kill -0 `cat $PIDFILE` 2>/dev/null
+	if [ $? = 0 ]
+	then
+	  sleep 5
+	  kill -KILL `cat $PIDFILE` 2>/dev/null
+	fi
+	chmod 0755 $CUXDIR/cuxd
+	$CUXDIR/cuxd >/dev/null 2>&1
+	logger -t homematic -p user.info "started cux-daemon"
+	;;
+
+  info)
+  	VER=`/usr/local/addons/cuxd/cuxd -v`
+	echo "Info: <center><b>CUx-Daemon $VER</b><br><img src="../addons/cuxd/CUXD.PNG"></center>"
+	echo "Name: CUx-Daemon"
+	echo "Version: $VER"
+	echo "Operations: uninstall restart"
+	echo "Config-Url: $CONFIG_URL"
+	echo "Update: http://cuxd.de/cuxd-ccu1.php"
+	;;
+
+  uninstall)
+	logger -t homematic -p user.info "removing cux-daemon"
+	killall -KILL cuxd >/dev/null 2>&1 || true
+	$CUXDIR/update_addon cuxd
+	rm /usr/local/etc/config/addons/www/cuxd
+	rm -rf $CUXDIR
+	;;
+
+  *)
+	echo "Usage: $0 {start|stop|restart|uninstall}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

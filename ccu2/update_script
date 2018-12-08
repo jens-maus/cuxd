@@ -1,0 +1,65 @@
+#!/bin/sh
+
+ADDON_DIR=/usr/local/addons/cuxd
+RCD_DIR=/usr/local/etc/config/rc.d
+CONFIG_DIR=/usr/local/etc/config
+STARTRC=/etc/init.d/S55cuxd
+STARTINIT=/etc/init.d/S55InitAddons
+
+if [ "$1" = "" ]
+then
+	exit 1
+fi
+
+mount /usr/local
+
+mkdir -p $ADDON_DIR
+chmod 755 $ADDON_DIR
+mkdir -p $RCD_DIR
+chmod 755 $RCD_DIR
+
+# remove daemon
+rm -f $ADDON_DIR/cuxd
+
+# disable debugging
+rm -f $ADDON_DIR/cuxd.dbg
+# enable debugging after installation "LOGLEVEL LOGFILE"
+#echo "10 /tmp/cuxddbglog.txt" >$ADDON_DIR/cuxd.dbg
+
+# remove link to website
+rm -f $CONFIG_DIR/addons/www/cuxd
+
+# save current configuration
+cp -af $ADDON_DIR/cuxd.ps $ADDON_DIR/cuxd.ps.old
+
+# copy addon
+cp -af cuxd/* $ADDON_DIR
+
+# copy startup script
+cp -af rc.d/* $RCD_DIR
+
+# link to website
+ln -sf $ADDON_DIR $CONFIG_DIR/addons/www/cuxd
+
+# add menu
+./update_addon cuxd cuxd_addon.cfg
+
+# create/check init.d symlink
+if [ -d /oldroot ]
+then
+  mount -t ubifs ubi0:root /oldroot
+  if [ -f /oldroot$STARTINIT ]
+  then
+    if [ -h /oldroot$STARTRC ]
+    then
+      rm -f /oldroot$STARTRC
+    fi
+  else
+    if [ ! -h /oldroot$STARTRC ]
+    then
+      ln -sf $RCD_DIR/cuxdaemon /oldroot$STARTRC
+    fi
+  fi
+fi
+
+sync

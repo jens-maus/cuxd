@@ -1,0 +1,53 @@
+#!/bin/sh
+
+ADDON_DIR=/usr/local/addons/cuxd
+RCD_DIR=/usr/local/etc/config/rc.d
+CONFIG_DIR=/usr/local/etc/config
+LCDTOOL=/bin/lcdtool
+$LCDTOOL "installing CUxD         "
+
+if [ "`mount | grep mtdblock3 | wc -l`" -eq 0 ]; then
+        mount /dev/mtdblock3
+fi
+
+mkdir -p $ADDON_DIR
+chmod 775 $ADDON_DIR
+mkdir -p $RCD_DIR
+chmod 755 $RCD_DIR
+
+# remove old stuff
+rm -f $ADDON_DIR/fw.tar.gz
+rm -f $ADDON_DIR/*.ko
+rm -f $ADDON_DIR/lib*.so*
+rm -f $ADDON_DIR/*.ccc
+rm -f $ADDON_DIR/hm_addons.cfg.*
+
+# remove daemon 
+rm -f $ADDON_DIR/cuxd
+
+# disable debugging
+rm -f $ADDON_DIR/cuxd.dbg
+# enable debugging after installation "LOGLEVEL LOGFILE"
+#echo "10 /tmp/cuxddbglog.txt" >$ADDON_DIR/cuxd.dbg
+
+# remove link to website
+rm -f $CONFIG_DIR/addons/www/cuxd
+
+# save current configuration
+cp -af $ADDON_DIR/cuxd.ps $ADDON_DIR/cuxd.ps.old
+
+# copy addon
+cp -af cuxd/* $ADDON_DIR
+
+# copy startup script
+cp -af rc.d/* $RCD_DIR
+
+# link to website
+ln -sf $ADDON_DIR $CONFIG_DIR/addons/www/cuxd
+
+# add menu
+./update_addon cuxd cuxd_addon.cfg
+
+sync
+
+$LCDTOOL "completed  CUxD       "

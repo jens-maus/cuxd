@@ -91,7 +91,9 @@ if {($reboot == 1) && ($reboot_flag == 1)} {
   exec mount -o remount,ro /
   puts -nonewline "saving DOM..."
   flush stdout
-  rega system.Save()
+  catch {
+    rega system.Save()
+  }
   set result [exec /usr/bin/tail -1 /etc/config/homematic.regadom]
   if {$result == "</dom>"} {
     puts " OK!"
