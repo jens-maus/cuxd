@@ -1,0 +1,116 @@
+#!/bin/sh
+CUXDIR=/usr/local/addons/cuxd
+CONFIG_URL=/addons/cuxd/index.ccc
+CONFIG_DIR=/usr/local/etc/config
+STARTRC=/etc/init.d/S55cuxd
+STARTINIT=/etc/init.d/S55InitAddons
+PSPID=`ps -o pid,comm | awk '{if($2=="cuxd"){print $1}}'`
+export TZ=`cat /etc/config/TZ`
+export LD_LIBRARY_PATH=$CUXDIR
+
+Start () {
+    echo -n "Starting CUxD: "
+    if [ ! -h $CONFIG_DIR/addons/www/cuxd ]
+    then
+      ln -sf $CUXDIR $CONFIG_DIR/addons/www/cuxd
+    fi
+    if [ -f $STARTINIT ]
+    then
+      if [ -h $STARTRC ]
+      then
+        rm -f $STARTRC
+      fi
+    else
+      if [ ! -h $STARTRC ]
+      then
+        ln -sf $CONFIG_DIR/rc.d/cuxdaemon $STARTRC
+      fi
+    fi
+    if [ "$PSPID" = "" ]
+    then
+      modprobe ehci_hcd 2>/dev/null
+      chmod 0755 $CUXDIR/cuxd
+      $CUXDIR/cuxd >/dev/null 2>&1
+      logger -t homematic -p user.info "started cux-daemon"
+    fi
+    echo "OK"
+}
+
+Stop () {
+    echo -n "Stopping CUxD: "
+    if [ "$PSPID" != "" ]
+    then
+      kill $1 $PSPID 2>/dev/null
+      sleep 1
+      kill -0 $PSPID 2>/dev/null
+      if [ $? -eq 0 ]
+      then
+        sleep 10
+        kill -KILL $PSPID 2>/dev/null
+      fi
+      logger -t homematic -p user.info "stopped cux-daemon"
+    fi
+    echo "OK"
+}
+
+case "$1" in
+  ""|init|start)
+    if [ -d $CUXDIR ]
+    then
+      Start
+    fi
+  ;;
+
+  stop)
+    Stop -TERM
+  ;;
+
+  restart)
+    Stop -HUP
+    if [ -d $CUXDIR ]
+    then
+      echo -n "Starting CUxD: "
+      chmod 0755 $CUXDIR/cuxd
+      $CUXDIR/cuxd >/dev/null 2>&1
+      logger -t homematic -p user.info "started (restart) cux-daemon"
+      echo "OK"
+    fi
+  ;;
+
+  info)
+    if [ -d $CUXDIR ]
+    then
+      VER=`$CUXDIR/cuxd -v`
+      echo "Info: <center><b>CUx-Daemon $VER</b><br><img src="../addons/cuxd/CUXD.PNG"></center>"
+      echo "Name: CUx-Daemon"
+      echo "Version: $VER"
+      echo "Operations: uninstall restart"
+      echo "Config-Url: $CONFIG_URL"
+      echo "Update: /addons/cuxd/extra/update-check.cgi"
+    fi
+  ;;
+
+  uninstall)
+    logger -t homematic -p user.info "removing cux-daemon"
+    killall -KILL cuxd >/dev/null 2>&1 || true
+    if [ -d $CUXDIR ]
+    then
+      $CUXDIR/update_addon cuxd
+      $CUXDIR/extra/ctl_startup 2 rfd HMServer ReGaHss
+      rm $CONFIG_DIR/addons/www/cuxd
+      rm -rf $CUXDIR
+    fi
+    /bin/sed -i '/<ipc>/{:a;N;/<\/ipc>/!ba};/<name>CUxD<\/name>/d' /etc/config/InterfacesList.xml
+    if [ -h $STARTRC ]
+    then
+      rm -f $STARTRC
+    fi
+  ;;
+
+  *)
+    echo "Usage: $0 {init|start|stop|restart|uninstall}" >&2
+    exit 1
+  ;;
+esac
+
+exit 0

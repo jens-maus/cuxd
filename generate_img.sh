@@ -10,7 +10,9 @@ generate_pkg()
 
   # generate ccu1 package
   cp -a common/* tmp/
-  cp -a ${1}/cuxd tmp/
+  cp -a ${1}/* tmp/
+  mv tmp/cuxd/cuxd_addon.cfg tmp/
+  ln -s tmp/cuxd/update_addon tmp/
   cd tmp
   tar --owner=root --group=root --exclude=.DS_Store -czvf ../cuxd_$(cat ../VERSION)_${1}.tar.gz *
   cd ..
@@ -27,4 +29,5 @@ else
   generate_pkg ccu1
   generate_pkg ccu2
   generate_pkg ccu3
+  generate_pkg ccu_x86_32
 fi
