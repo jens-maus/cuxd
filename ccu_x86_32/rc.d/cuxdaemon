@@ -4,7 +4,7 @@ CONFIG_URL=/addons/cuxd/index.ccc
 CONFIG_DIR=/usr/local/etc/config
 STARTRC=/etc/init.d/S55cuxd
 STARTINIT=/etc/init.d/S55InitAddons
-PSPID=`ps -o pid,comm | awk '{if($2=="cuxd"){print $1}}'`
+PSPID=`ps -A -o pid,comm | awk '{if($2=="cuxd"){print $1}}'`
 export TZ=`cat /etc/config/TZ`
 export LD_LIBRARY_PATH=$CUXDIR
 
