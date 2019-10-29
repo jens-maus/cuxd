@@ -12,7 +12,7 @@ generate_pkg()
   cp -a common/* tmp/
   cp -a ${1}/* tmp/
   mv tmp/cuxd/cuxd_addon.cfg tmp/
-  ln -s tmp/cuxd/update_addon tmp/
+  ln -s cuxd/update_addon tmp/
   cd tmp
   tar --owner=root --group=root --exclude=.DS_Store -czvf ../cuxd_$(cat ../VERSION)_${1}.tar.gz *
   cd ..
