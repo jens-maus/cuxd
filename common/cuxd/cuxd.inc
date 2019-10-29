@@ -24,7 +24,7 @@ function reload_main(){
 <table align='center' border='0' bordercolor='transparent' width='300'> 
 <tr>
 <td style='font-family:arial;font-style:italic;font-size:12px;white-space:nowrap'>CCU-Firmware:&nbsp;%s&nbsp;&nbsp;&nbsp;</td>
-<td style='border-style:none;margin-bottom:0px;margin-top:0px;'><img src='%s?m=110'></td>
+<td style='border-style:none;margin-bottom:0px;margin-top:0px;'><img src='%s?sid=<!SID!>&m=110'></td>
 <td style='font-family:arial;font-style:italic;font-size:12px'>&nbsp;&nbsp;Version&nbsp;%s</td>
 </tr>
 </table>
@@ -48,7 +48,7 @@ CUxD-Ger&auml;te verwalten
 </td>
 <td width='20%%' align='right'>
 <form name='optionsform' id='optionsform' style='margin:0;padding:0;' method='get' action=''>
-<input type='button' value='Open' style='width:70px;font-family:arial;font-size:12px;' onClick='window.open("?m=52")' />
+<input type='button' value='Open' style='width:70px;font-family:arial;font-size:12px;' onClick='window.open("?sid=<!SID!>&m=52")'/>
 </form>
 </td>
 </tr>
@@ -59,6 +59,7 @@ CUxD-Ger&auml;te verwalten
 <td id='left_table' style='width:50%%; height:100%%; padding:16px'>
 <form id='dtype' name='dtype' method='get' action='%s' target='doptions' style='border:0px;font-family:arial;font-size:13px;white-space:nowrap'>
 <b>CUxD&nbsp;Ger&auml;tetyp:</b>&nbsp;\
+<input type='hidden' name='sid' value='<!SID!>'/>
 <select name='m' size='1' style='width:50%%;' onChange='dtype2.value=0;dtype.submit();'>
 <option value='200' style='background-color:#E0E0FF'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- EnOcean -----</option>
 <option value='233'>(33) [RPS] Taster und Drehgriffkontakt</option>
@@ -108,13 +109,13 @@ CUxD-Ger&auml;te verwalten
 <option value='230' style='background-color:#FFE0E0'>(30) Wetter Thermo/Hygro/Baro</option>
 <!-- <option value='299' style='background-color:#FFE0E0'>(99) email-SMTP/IMAP Device</option> -->
 </select>
-<input type='hidden' name='dtype2' value='0' />
+<input type='hidden' name='dtype2' value='0'/>
 </form>
-<iframe name='doptions' src='%s?m=50' width='99%%' height='310px' scrolling='no' frameborder='0' style='background-color:transparent;border:0px solid #cccccc; padding:0px;'>
+<iframe name='doptions' src='%s?sid=<!SID!>&m=50' width='99%%' height='310px' scrolling='no' frameborder='0' style='background-color:transparent;border:0px solid #cccccc; padding:0px;'>
 </iframe>
 </td>
 <td style='width:50%%; height:100%%;'>
-<iframe name='dstatus' src='%s?m=51' width='99%%' height='100%%' scrolling='no' frameborder='0' style='background-color:#ffffee;border:0px solid #cccccc; padding:0px;'>
+<iframe name='dstatus' src='%s?sid=<!SID!>&m=51' width='99%%' height='100%%' scrolling='no' frameborder='0' style='background-color:#ffffee;border:0px solid #cccccc; padding:0px;'>
 </iframe>
 </td>
 </tr>
@@ -127,25 +128,28 @@ CUxD-Ger&auml;te verwalten
 |
 <td style='text-align:center'>
 <form style='margin:0;padding:0;' method='get' action='%s' target='mount'>
+<input type='hidden' name='sid' value='<!SID!>'/>
 <input type='hidden' name='m' value='70'/>
 <input type='submit' value='Ger&auml;teeinstellungen speichern' style='width:200px;font-family:arial;font-size:12px;'/>
 </form>
 </td>
 <td style='text-align:center'>
 <form style='margin:0;padding:0;' method='get' action='%s' target='cuxdstatus'>
+<input type='hidden' name='sid' value='<!SID!>'/>
 <input type='hidden' name='m' value='101'/>
 <input type='submit' value='CUxD-Restart' style='width:100px;font-family:arial;font-size:12px;' onClick='return(confirm("Restart CUxD?"));'/>
 </form>
 </td>
 <td style='text-align:center'>
 <form style='margin:0; padding:0;' method='get' action='%s' target='cuxdstatus'>
+<input type='hidden' name='sid' value='<!SID!>'/>
 <input type='hidden' name='m' value='100'/>
 <input type='submit' value='CUxD-Stop' style='width:100px; font-family:arial;font-size:12px;' onClick='return(confirm("Stop CUxD?"));'/>
 </form>
 </td>
 <td style='text-align:center'>
 <form style='margin:0; padding:0;'>
-<input type='button' value='Refresh' style='width:100px; font-family:arial;font-size:12px;' onClick='parent.cuxddisplay.cuxdstatus.location.reload(false);' />
+<input type='button' value='Refresh' style='width:100px; font-family:arial;font-size:12px;' onClick='parent.cuxddisplay.cuxdstatus.location.reload(false);'/>
 </form>
 </td>
 |
@@ -161,7 +165,7 @@ CUxD-Ger&auml;te verwalten
 |
 ##5
 |
-<td><div align='center'><a class='menu%s' href='%s?m=%d'>%s</a></div></td>
+<td><div align='center'><a class='menu%s' href='%s?sid=<!SID!>&m=%d'>%s</a></div></td>
 |
 ##6
 |
@@ -170,7 +174,7 @@ CUxD-Ger&auml;te verwalten
 <hr/>
 </div>
 <div align='center'>
-<iframe name='cuxddisplay' src='%s?m=1%d' width='90%%' height='%d' scrolling='no' frameborder='0' style='background-color:transparent;border:0px solid #11cccc;padding:0px;'>
+<iframe name='cuxddisplay' src='%s?sid=<!SID!>&m=1%d' width='90%%' height='%d' scrolling='no' frameborder='0' style='background-color:transparent;border:0px solid #11cccc;padding:0px;'>
 </iframe>
 |
 ##7
@@ -190,15 +194,15 @@ Aktuelle Status Information
 </td>
 <td width='35%%' align='right'>
 <form name='statusform' id='statusform' style='margin:0;padding:0;' method='get' action='' target='cuxdstatus'>
-<input type='button' value='SERVICE' title='CCU Servicefunktionen' style='width:70px;font-family:arial;font-size:12px;' onClick='window.open("?maintenance=","_top")' />
-<input type='button' value='ADDR' title='aktuell empfangene Adressen anzeigen' style='width:70px;font-family:arial;font-size:12px;' onClick='window.open("?m=17&i=2","ADDR")' />
-<input type='button' value='Open' style='width:70px;font-family:arial;font-size:12px;' onClick='window.open("?m=15")' />
+<input type='button' value='SERVICE' title='CCU Servicefunktionen' style='width:70px;font-family:arial;font-size:12px;' onClick='window.open("?sid=<!SID!>&maintenance=","_top")'/>
+<input type='button' value='ADDR' title='aktuell empfangene Adressen anzeigen' style='width:70px;font-family:arial;font-size:12px;' onClick='window.open("?sid=<!SID!>&m=17&i=2","ADDR")'/>
+<input type='button' value='Open' style='width:70px;font-family:arial;font-size:12px;' onClick='window.open("?sid=<!SID!>&m=15")'/>
 </form>
 </td>
 </tr>
 </table>
 <div align='center' style='border:1px solid #aaaaaa;'>
-<iframe name='cuxdstatus' src='%s?m=15' width='100%%' height='380' name='content' scrolling='auto' frameborder='0' style='padding:0px;'>
+<iframe name='cuxdstatus' src='%s?sid=<!SID!>&m=15' width='100%%' height='380' name='content' scrolling='auto' frameborder='0' style='padding:0px;'>
 </iframe>
 </div>
 </body>
@@ -218,7 +222,7 @@ Aktuelle Status Information
 ##9
 |
 </pre></div>
-<a name="ET" />
+<a name="ET"/>
 </body>
 <script LANGUAGE="JavaScript">
 <!--
@@ -242,20 +246,21 @@ Info
 <td width='30%%' align='right'>
 <form name='infoform' id='infoform' style='margin:0;padding:0;' method='get' action='' target='cuxdoutput'>
 <nobr>
-<input type='text' name='filter' />
-<input type='submit' name='a' value='All' title='Alle Daten laden' style='width:70px;font-family:arial;font-size:12px;' onClick='form.lines.value=0' />
-<input type='button' value='Open' style='width:70px;font-family:arial;font-size:12px;' onClick='window.open("?m="+form.m.value+"&lines=0&logfile="+form.logfile.value+"&filter="+encodeURIComponent(form.filter.value))' />
+<input type='hidden' name='sid' value='<!SID!>'/>
+<input type='text' name='filter'/>
+<input type='submit' name='a' value='All' title='Alle Daten laden' style='width:70px;font-family:arial;font-size:12px;' onClick='form.lines.value=0'/>
+<input type='button' value='Open' style='width:70px;font-family:arial;font-size:12px;' onClick='window.open("?sid=<!SID!>&m="+form.m.value+"&lines=0&logfile="+form.logfile.value+"&filter="+encodeURIComponent(form.filter.value))'/>
 </nobr>
-<input type='hidden' name='m' value='20' />
-<input type='hidden' name='lines' value='%d' />
-<input type='hidden' name='logfile' value='%s' />
+<input type='hidden' name='m' value='20'/>
+<input type='hidden' name='lines' value='%d'/>
+<input type='hidden' name='logfile' value='%s'/>
 |</span>
 </form>
 </td>
 </tr>
 </table>
 <div align='center' style='border:1px solid #aaaaaa;'>
-<iframe width='100%%' scrolling='auto' height='380' frameborder='0' style='padding:0px;' src='index.ccc?m=20&lines=%d' name='cuxdoutput'>
+<iframe width='100%%' scrolling='auto' height='380' frameborder='0' style='padding:0px;' src='index.ccc?sid=<!SID!>&m=20&lines=%d' name='cuxdoutput'>
 </iframe>
 </div>
 </body>
@@ -276,13 +281,13 @@ Sende/Empfangs-Terminal
 </td>
 <td width='20%%' align='right'>
 <form name='termform' id='termform' style='margin:0;padding:0;' method='get' action='' target='cuxdoutput'>
-<input type='button' value='Open' style='width:70px;font-family:arial;font-size:12px;' onClick='window.open("?a=All&m=23")' />
+<input type='button' value='Open' style='width:70px;font-family:arial;font-size:12px;' onClick='window.open("?a=All&sid=<!SID!>&m=23")'/>
 </form>
 </td>
 </tr>
 </table>
 <div align='center' style='border:1px solid #aaaaaa;'>
-<iframe width='100%%' scrolling='no' height='380' frameborder='0' style='padding:0px;' src='index.ccc?m=16' name='cuxdoutput'>
+<iframe width='100%%' scrolling='no' height='380' frameborder='0' style='padding:0px;' src='index.ccc?sid=<!SID!>&m=16' name='cuxdoutput'>
 </iframe>
 </div>
 </body>
@@ -293,7 +298,7 @@ Sende/Empfangs-Terminal
 <table align='center' border='0' bordercolor='transparent' style='background-color:transparent' width='90%%'>
 <tr>
 <td>
-<form style='margin:0;padding:0;' method='post' action='%s?m=1' target='cuxdoutput' onSubmit='document.getElementById("sendcmd").focus();return true;'> 
+<form style='margin:0;padding:0;' method='post' action='%s?sid=<!SID!>&m=1' target='cuxdoutput' onSubmit='document.getElementById("sendcmd").focus();return true;'> 
 <input id='sendcmd' name='cmd' style='width:70%%' rows='1'>&nbsp;<select name='dev' style='width:18%%;font-family:arial;font-size:12px;' onChange='document.getElementById("sendcmd").focus();'>
 %s
 </select>&nbsp;<input type='submit' value='Senden' style='width:10%%;font-family:arial;font-size:12px;'/>
@@ -317,9 +322,9 @@ Seriennummer:&nbsp;<input type='text' name='dserial' maxlength='5' size='5' valu
 |
 ##14
 |
-</td><td><img src='%s?m=%d' name='pictures' border='0'>
+</td><td><img src='%s?sid=<!SID!>&m=%d' name='pictures' border='0'>
 </td></tr></table><br><br style='font-size:16px'>
-<input type='submit' value='Ger&auml;t auf CCU erzeugen !' style='width:180px;font-family:arial;font-size:12px;' onclick='return confirm_device(form.dtype,form.dtype2);' />
+<input type='submit' value='Ger&auml;t auf CCU erzeugen !' style='width:180px;font-family:arial;font-size:12px;' onclick='return confirm_device(form.dtype,form.dtype2);'/>
 </form>
 |
 ##15
@@ -397,7 +402,7 @@ function submit_dtype2(obj) {
 }
 //--></script>
 <div style='font-family:arial;font-size:13px;' align='left'>
-<form name='dtype' method='post' action='%s?m=3' target='dstatus'>
+<form name='dtype' method='post' action='%s?sid=<!SID!>&m=3' target='dstatus'>
 <input type='hidden' name='dtype' value='%d'/>
 |
 ##20
@@ -431,7 +436,7 @@ foreach(id,root.Devices().EnumUsedIDs()){
 <!--
 function showimage() {
   if (document.images) {
-    document.images.pictures.src='%s?m='+document.dtype.dbase.options[document.dtype.dbase.selectedIndex].value;
+    document.images.pictures.src='%s?sid=<!SID!>&m='+document.dtype.dbase.options[document.dtype.dbase.selectedIndex].value;
   }
 }
 function confirm_device(dtype,dtype2) {
@@ -455,7 +460,7 @@ function confirm_device(dtype,dtype2) {
 |</div>
 |<br>
 <br><br>
-<a href='%s?m=55' target='_blank'>Ansehen/Download Firmware-Update Log</a>
+<a href='%s?sid=<!SID!>&m=55' target='_blank'>Ansehen/Download Firmware-Update Log</a>
 |
 ##24
 |
@@ -488,7 +493,7 @@ function confirm_device(dtype,dtype2) {
 |
 <html>
 <head>
-<meta http-equiv='REFRESH' content='%d;URL=%s?m=16'/> 
+<meta http-equiv='REFRESH' content='%d;URL=%s?sid=<!SID!>&m=16'/> 
 </head>
 <body style='font-family:courier new;margin:0;padding:0;background-color:#ffffff'>
 <div style='border:1px;font-size:11px;background-color:#ffffff'>
@@ -527,7 +532,7 @@ foreach (c,root.Channels().EnumUsedIDs()){
 |
 ##31
 |
-</span><br><br style='font-size:16px'><form name='dlist' method='post' action='%s?m=4' target='dstatus'> 
+</span><br><br style='font-size:16px'><form name='dlist' method='post' action='%s?sid=<!SID!>&m=4' target='dstatus'> 
 <select name='dselect' size='20' style='width:100%%;font-family:courier new;font-size:12px;'>
 |
 ##32
@@ -536,7 +541,7 @@ foreach (c,root.Channels().EnumUsedIDs()){
 <td style='vertical-align:top'>
 <input type='submit' value='Ger&auml;t von CCU l&ouml;schen !' style='width:180px;font-family:arial;font-size:12px;' onClick='var si = dselect.selectedIndex;return(si != -1 && confirm("Ger&auml;t [CUX" + dselect.options[si].value + "] l&ouml;schen?"));'/>
 &nbsp;&nbsp;&nbsp;
-<input type='button' value='Ger&auml;t bearbeiten' style='width:180px;font-family:arial;font-size:12px;' onClick='var si = dselect.selectedIndex;if (si != -1) { parent.document.getElementById("left_table").innerHTML="<iframe width=\"100%%\" height=\"100%%\" src=\"index.ccc?m=53&dev="+dselect.options[si].value+"\" name=\"devedit\" scrolling=\"no\" frameborder=\"0\" style=\"padding:0px;\"></iframe>";}'/>
+<input type='button' value='Ger&auml;t bearbeiten' style='width:180px;font-family:arial;font-size:12px;' onClick='var si = dselect.selectedIndex;if (si != -1) { parent.document.getElementById("left_table").innerHTML="<iframe width=\"100%%\" height=\"100%%\" src=\"index.ccc?sid=<!SID!>&m=53&dev="+dselect.options[si].value+"\" name=\"devedit\" scrolling=\"no\" frameborder=\"0\" style=\"padding:0px;\"></iframe>";}'/>
 </td></tr></table>
 |
 ##33
@@ -551,13 +556,16 @@ foreach (c,root.Channels().EnumUsedIDs()){
 zum Aktivieren speichern (siehe Status-Men&uuml;)
 </span><br><br>
 <span align=center>
-<form method='post' action='%s?m=2'>
+<form method='post' action='%s?sid=<!SID!>&m=2'>
 <textarea name='cuxdconfig' style='width:100%%;margin-top:0px;margin-bottom:1px; height:350px;font-family:courier new;font-size:12px;'>
 |
 ##34
 |
 </textarea><br><br>
-<nobr><input type='submit' value='Speichern' style='width:120px;font-family:arial;font-size:12px;'/>&nbsp;&nbsp;&nbsp;<input type='submit' value='Parameterabgleich' style='width:120px;font-family:arial;font-size:12px;' onClick='if (confirm("Einstellungen &uuml;berschreiben?")) {this.form.cuxdconfig.value="";return true;} else return false;'/></nobr>
+<nobr>\
+<input type='submit' value='Speichern' style='width:120px;font-family:arial;font-size:12px;'/>&nbsp;&nbsp;&nbsp;\
+<input type='submit' value='Parameterabgleich' style='width:120px;font-family:arial;font-size:12px;' onClick='if (confirm("Einstellungen &uuml;berschreiben?")) {this.form.cuxdconfig.value="";return true;} else return false;'/>\
+</nobr>
 </form>
 </div>
 </td>
@@ -566,10 +574,11 @@ zum Aktivieren speichern (siehe Status-Men&uuml;)
 <b>Firmware-Update:</b><br>Ger&auml;t durch Dr&uuml;cken des Tasters bzw. Terminalbefehl<br>in Update-Modus versetzen (siehe Dokumentation)<br>
 <br></span>
 <div align=center><form style='margin:0;padding:0;' method='get' action='%s' target='device'> 
+<input type='hidden' name='sid' value='<!SID!>'/>
 <input type='hidden' name='m' value='30'/>
 <input type='submit' value='Ger&auml;t suchen' style='font-family:arial;font-size:12px;'/>
 </form>
-<iframe src='%s?m=30' width='100%%' height='350' name='device' scrolling='no' frameborder='0' style='padding:0px;'>
+<iframe src='%s?sid=<!SID!>&m=30' width='100%%' height='350' name='device' scrolling='no' frameborder='0' style='padding:0px;'>
 </iframe>
 </span></td></tr></table></body></html>
 |
@@ -598,6 +607,7 @@ Firmware-Update gestartet:
 <td style='text-align:center'>
 |<form style='margin:0;padding:0;' method='get' target='cuxdoutput' onSubmit='var title=parent.cuxddisplay.document.getElementById("titletext");title.innerHTML="Device-Log";'>
 <form style='margin:0;padding:0;' method='get' target='cuxdoutput'>
+<input type='hidden' name='sid' value='<!SID!>'/>
 <input type='hidden' name='m' value='24'><input type='submit' value='%s' style='width:140px; font-family:arial;font-size:12px;'/>
 </form>
 </td>
@@ -607,18 +617,21 @@ Firmware-Update gestartet:
 <iframe frameborder='0' name='mount' width='0' height='0'></iframe>
 <td style='text-align:center'>
 <form style='margin:0;padding:0;' method='get' action='%s' target='mount'>
+<input type='hidden' name='sid' value='<!SID!>'/>
 <input type='hidden' name='m' value='102'/>
 <input %s type='submit' value='Mount' style='width:100px;font-family:arial;font-size:12px;%s' title='Automount'/>
 </form>
 </td>
 <td style='text-align:center'>
 <form style='margin:0;padding:0;' method='get' action='%s' target='mount'>
+<input type='hidden' name='sid' value='<!SID!>'/>
 <input type='hidden' name='m' value='103'/>
 <input %s type='submit' value='Umount' style='width:100px;font-family:arial;font-size:12px;'/>
 </form>
 </td>
 <td style='text-align:center'>
 <form style='margin:0;padding:0;' method='get' action='%s' target='mount'>
+<input type='hidden' name='sid' value='<!SID!>'/>
 <input type='hidden' name='m' value='104'/>
 <input %s type='submit' value='SYS-Backup' style='width:100px;font-family:arial;font-size:12px;'  onClick='return(confirm("System-Backup ausf&uuml;hren?"));'/>
 </form>
@@ -678,6 +691,7 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='0'$selected$>Transform</option>
 <option value='1'$selected$>State</option>
 <option value='2'$selected$>Thermostat</option>
+<!-- <option value='3'$selected$>LED16</option> -->
 </select><br><br>
 |
 ##48
@@ -758,21 +772,22 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 ##56
 |
 &nbsp;&nbsp;<form target="chart" action="../cuxchart/">\
-<input type="hidden" name="loader" value="false" \>\
-<input type="hidden" name="legend" value="" \>\
-<input type="hidden" name="grouping" value="" \>\
-Period:<input type="text" name="period" size="3" value="168" \>\
-&nbsp;&nbsp;Range:<input type="text" name="range" size="3" value="30" \>\
-&nbsp;&nbsp;Legend:<input type="checkbox" onClick="legend.value = this.checked ? \'\' : \'false\'" checked \>\
-&nbsp;&nbsp;Grouping:<input type="checkbox" onClick="grouping.value = this.checked ? \'\' : \'false\'" checked \>\
-&nbsp;&nbsp;<input type="submit" value="Chart" title="CUxD-Highcharts" style="width:70px;font-family:arial;font-size:12px;" />\
+<input type="hidden" name="sid" value="<!SID!>"/>\
+<input type="hidden" name="loader" value="false"/>\
+<input type="hidden" name="legend" value=""/>\
+<input type="hidden" name="grouping" value=""/>\
+Period:<input type="text" name="period" size="3" value="168"/>\
+&nbsp;&nbsp;Range:<input type="text" name="range" size="3" value="30"/>\
+&nbsp;&nbsp;Legend:<input type="checkbox" onClick="legend.value = this.checked ? \'\' : \'false\'" checked />\
+&nbsp;&nbsp;Grouping:<input type="checkbox" onClick="grouping.value = this.checked ? \'\' : \'false\'" checked />\
+&nbsp;&nbsp;<input type="submit" value="Chart" title="CUxD-Highcharts" style="width:70px;font-family:arial;font-size:12px;"/>\
 </form>\
 |
 ##57
 |
 %s/%s<tr><td colspan=2>
 <a href="%s" target="_blank">
-<img src="%s" style="max-width:%hupx;height:%hupx" title="open" alt="%s" />
+<img src="%s" style="max-width:%hupx;height:%hupx" title="open" alt="%s"/>
 </a>
 </td></tr>
 |
@@ -794,14 +809,15 @@ Period:<input type="text" name="period" size="3" value="168" \>\
 |
 <body>
 <form name='dtype' method='get' action='%s'>
-<input type='hidden' name='m' value='53' />
-<input type='hidden' name='dev' value='%s' />
+<input type='hidden' name='sid' value='<!SID!>'/>
+<input type='hidden' name='m' value='53'/>
+<input type='hidden' name='dev' value='%s'/>
 <h2 style='font-family:arial'>CUX%s%s</h2>
 <table><tr><td style='font-family:arial;font-size:12px;'>
 |
 ##60
 |
-<td style='width:100px;text-align:right'><img src='%s?m=%d' name='pictures' border='0'></td>
+<td style='width:100px;text-align:right'><img src='%s?sid=<!SID!>&m=%d' name='pictures' border='0'></td>
 </tr></table><br><br>
 <input type='submit' value='Ger&auml;t auf CCU &auml;ndern !' style='width:200px;font-family:arial;font-size:12px;' %s/>
 </form>
@@ -845,7 +861,7 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 |
 <html>
 <head>
-<meta http-equiv="REFRESH" content="2;url=%s?m=%d&n=%d"/>
+<meta http-equiv='REFRESH' content='2;URL=%s?sid=<!SID!>&m=%d&n=%d'/>
 </head>
 <body>
 <center><br><br>%s</center>
@@ -858,4 +874,34 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='1'>1 Kanal</option>
 <option value='4'>4 Kanal</option>
 </select>
+|
+##68
+|
+string sUser = system.GetSessionVarStr("<!SID!>");
+integer ret = 0;
+if (sUser) {
+  string sUPL = sUser.StrValueByIndex(";", 1);
+  if (sUPL == iulAdmin) {
+    ret = 1;
+  }
+}  
+|
+##69
+|
+<form method='get' action=''>
+<input type='hidden' name='sid' value='<!SID!>'/>
+<input type='hidden' name='m' value='%d'/>
+<input type='submit' value='STOP'/>
+</form>
+|
+##70
+|
+<form method='get' action=''>
+<input type='hidden' name='sid' value='<!SID!>'/>
+<input type='hidden' name='m' value='%d'/>
+Refresh:<input type='text' size='2' maxlength='3' name='i' value='%d'/>s
+[?]<input type='checkbox' name='a' value='1'%s/>
+[X]<input type='checkbox' name='b' value='1'%s/>
+<input type='submit' value='START'/>
+</form>
 |

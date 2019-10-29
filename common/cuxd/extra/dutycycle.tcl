@@ -1,40 +1,50 @@
 #!/bin/tclsh
 #
-# (C) '2017 by Uwe Langhammer
+# (C) '2018 by Uwe Langhammer
 # script for reading RFD duty cycles
 #
 # all parameters are optional!
 #
-# usage: dutycycle.tcl [<filename>] [<sleep_sec>]
+# usage: dutycycle.tcl <port>[,<port>...] [<filename>] [<sleep_sec>]
 #
 load tclrpc.so
 
-set filename [lindex $argv 0]
-set sleep [lindex $argv 1]
+set ports [lindex $argv 0]
+set filename [lindex $argv 1]
+set sleep [lindex $argv 2]
+
+if { $argc <  1 } {
+  puts "USAGE: dutycycle.tcl <port>\[,<port>...\] \[<filename>i\] \[<sleep_sec>\]"
+  exit 1
+}
 
 set sleep1000s 0
 if {[string is double $sleep] && ($sleep > 0)} {
   set sleep1000s [expr int([expr $sleep * 1000])]
 }
 
+set portlist [split $ports ","]
+
 while { 1 } {
-  set r ""
-  if {[catch {set r [xmlrpc http://127.0.0.1:2001/ listBidcosInterfaces]} fid]} {
-    puts stderr $fid
-  }
   set lines ""
-  if {[string length $r] > 20 } {
-    foreach gateway $r {
-      array set gw $gateway
-      set records {ADDRESS TYPE DUTY_CYCLE}
-      foreach rec $records {
-        if {[info exists gw($rec)]} {
-          append lines "$gw($rec)\t"
-        } else {
-          append lines "\t"
+  foreach port $portlist {
+    set r ""
+    if {[catch {set r [xmlrpc http://127.0.0.1:$port/ listBidcosInterfaces]} fid]} {
+      puts stderr $fid
+    }
+    if {[string length $r] > 20 } {
+      foreach gateway $r {
+        array set gw $gateway
+        set records {ADDRESS TYPE DUTY_CYCLE}
+        foreach rec $records {
+          if {[info exists gw($rec)]} {
+            append lines "$gw($rec)\t"
+          } else {
+            append lines "\t"
+          }
         }
+        append lines "\n"
       }
-      append lines "\n"
     }
   }
   if {[string length $filename] > 1 } {

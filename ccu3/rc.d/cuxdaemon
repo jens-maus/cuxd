@@ -33,6 +33,17 @@ Start () {
     if [ "$PSPID" = "" ]
     then
       modprobe ehci_hcd 2>/dev/null
+      if [ -f $CUXDIR/cuxd.ini ]
+      then
+        grep -v "^HM-SCRIPTHOST=\|^HM-SCRIPTPORT=\|^HM-REGAPORT=" $CUXDIR/cuxd.ini >/tmp/cuxd.ini
+        diff -q $CUXDIR/cuxd.ini /tmp/cuxd.ini >/dev/null
+        if [ $? -ne 0 ]
+        then
+          mv /tmp/cuxd.ini $CUXDIR/cuxd.ini
+        else
+          rm /tmp/cuxd.ini
+        fi
+      fi
       chmod 0755 $CUXDIR/cuxd
       $CUXDIR/cuxd >/dev/null 2>&1
       logger -t homematic -p user.info "started cux-daemon"

@@ -23,6 +23,7 @@ HM-Sec-RHS          17_hm-sec-rhs_thumb         Fenster-/ Drehgriffkontakt
 HM-Sen-EP           48_hm-sen-ep_thumb          Impulssensor
 HM-Sec-WDS          49_hm-sec-wds_thumb         Wassermelder
 HM-Sen-RD-O         87_hm-sen-rd-o_thumb        Regensensor
+HM-Sen-LI-O         126_hm-sen-li-o_thumb       Lichtsensor
 
 HM-PB-2-WM          PushButton-2ch-wm_thumb     Wandtaster 2 Kanal
 HM-PB-4-WM          PushButton-4ch-wm_thumb     Wandtaster 4 Kanal
@@ -66,4 +67,3 @@ HM-OU-LED16         78_hm-ou-led16_thumb        Statusanzeige 16 Kanal
 HM-Sec-SD           51_hm-sec-sd_thumb          Rauchmelder
 HM-Sec-SD-Team      52_hm-sec-sd-team_thumb     Rauchmelder (Gruppe)
 HM-Sec-Key          14_hm-sec-key_thumb         KeyMatic
-

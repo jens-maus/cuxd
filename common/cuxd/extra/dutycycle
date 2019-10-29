@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # DutyCycle Monitor start/stop script
-# (C) '2017 by Uwe Langhammer
+# (C) '2018 by Uwe Langhammer
 #
 PROCPATH=/usr/local/addons/cuxd/extra
 PROC=dutycycle.tcl
@@ -27,10 +27,13 @@ case "$1" in
   	
         if [ "$1" != "stop" ]
         then
+		PORTS=`grep -A 1 "\-RF</name>" /etc/config/InterfacesList.xml | sed -n 's%.*<url>.*:\([0-9]\+\)</url>.*%\1%p'`
+		PORTS=`echo $PORTS |  tr ' ' ','`
+#PORTS=2001,2010
         	if [ -x "$PROCPATH/$PROC" ]
         	then
-			$PROCPATH/$PROC $FILENAME $SLEEP &
-			logger $PROC[$!] $FILENAME $SLEEP started
+			$PROCPATH/$PROC $PORTS $FILENAME $SLEEP &
+			logger $PROC[$!] $PORTS $FILENAME $SLEEP started
 		else
 			logger $PROCPATH/$PROC not found!
 		fi

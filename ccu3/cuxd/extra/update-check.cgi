@@ -18,7 +18,7 @@ if { [info exists cmd ] && $cmd == "download"} {
   puts -nonewline "<html><head><meta http-equiv='refresh' content='0; url=$downloadURL' /></head><body></body></html>"
 } else {
   catch {
-    set newversion [ exec /usr/bin/wget -qO- --no-check-certificate $checkURL ]
+    set newversion [ exec /usr/bin/wget -qO- --no-check-certificate $checkURL | head -1 ]
   }
   if { [info exists newversion] } {
     puts $newversion
