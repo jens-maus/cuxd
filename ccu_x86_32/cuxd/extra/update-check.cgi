@@ -1,7 +1,7 @@
 #!/bin/tclsh
 
-set checkURL    "http://cuxd.de/cuxd-ccurm.php?$env(QUERY_STRING)"
-set downloadURL "http://cuxd.de/cuxd-ccurm.php?$env(QUERY_STRING)"
+set checkURL    "http://cuxd.de/cuxd-ccux86.php?$env(QUERY_STRING)"
+set downloadURL "http://cuxd.de/cuxd-ccux86.php?$env(QUERY_STRING)"
 
 catch {
   set input $env(QUERY_STRING)

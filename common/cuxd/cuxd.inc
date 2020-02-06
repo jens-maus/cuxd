@@ -591,6 +591,7 @@ zum Aktivieren speichern (siehe Status-Men&uuml;)
 ##36
 |
 <div style='height:400px;'>
+<input type='hidden' name='sid' value='<!SID!>'/>
 <input type='submit' value='Firmwareupdate starten' style='font-family:arial; font-size:12px;'/>
 </form>
 </div>
@@ -904,4 +905,11 @@ Refresh:<input type='text' size='2' maxlength='3' name='i' value='%d'/>s
 [X]<input type='checkbox' name='b' value='1'%s/>
 <input type='submit' value='START'/>
 </form>
+|
+##71
+|
+Ger&auml;t:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
+<option value='0'$selected$>1. Schalter</option>
+<option value='1'$selected$>2. Dimmer</option>
+</select><br><br>
 |
