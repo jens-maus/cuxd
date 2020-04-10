@@ -2,25 +2,25 @@
 CUXDIR=/usr/local/addons/cuxd
 CONFIG_URL=/addons/cuxd/index.ccc
 PIDFILE=/var/run/cuxd.pid
-export LD_LIBRARY_PATH=/usr/local/addons/cuxd
+export LD_LIBRARY_PATH=$CUXDIR
 export CURL_CA_BUNDLE=$CUXDIR/extra/cacert.pem
 
 case "$1" in
   ""|start)
 	if [ ! -h /usr/local/etc/config/addons/www/cuxd ] 
-	then ln -sf /usr/local/addons/cuxd /usr/local/etc/config/addons/www/cuxd
+	then ln -sf $CUXDIR /usr/local/etc/config/addons/www/cuxd
 	fi
-        if [ -f /usr/local/addons/cuxd/cuxd.ini ]
+        if [ -f $CUXDIR/cuxd.ini ]
         then
-          grep -v "^HM-SCRIPTHOST=\|^HM-SCRIPTPORT=\|^HM-REGAPORT=" /usr/local/addons/cuxd/cuxd.ini >/tmp/cuxd.ini
-          diff -q /usr/local/addons/cuxd/cuxd.ini /tmp/cuxd.ini >/dev/null
+          grep -v "^HM-SCRIPTHOST=\|^HM-SCRIPTPORT=\|^HM-REGAPORT=" $CUXDIR/cuxd.ini >/tmp/cuxd.ini
+          diff -q $CUXDIR/cuxd.ini /tmp/cuxd.ini >/dev/null
           if [ $? -ne 0 ]
-          then mv /tmp/cuxd.ini /usr/local/addons/cuxd/cuxd.ini
+          then mv /tmp/cuxd.ini $CUXDIR/cuxd.ini
           fi
         fi
 	chmod 0755 $CUXDIR/cuxd
 	$CUXDIR/cuxd >/dev/null 2>&1
-	logger -t homematic -p user.info "started cux-daemon"
+	logger -t cuxd -p user.info "started cux-daemon"
 	;;
 
   stop)
@@ -32,12 +32,12 @@ case "$1" in
 	  sleep 10
 	  kill -KILL `cat $PIDFILE` 2>/dev/null
 	fi
-	logger -t homematic -p user.info "stopped cux-daemon"
+	logger -t cuxd -p user.info "stopped cux-daemon"
 	;;
 
   restart)
 	kill -HUP `cat $PIDFILE` 2>/dev/null
-	logger -t homematic -p user.info "stopped (restart) cux-daemon"
+	logger -t cuxd -p user.info "stopped (restart) cux-daemon"
 	sleep 1
 	kill -0 `cat $PIDFILE` 2>/dev/null
 	if [ $? = 0 ]
@@ -47,11 +47,11 @@ case "$1" in
 	fi
 	chmod 0755 $CUXDIR/cuxd
 	$CUXDIR/cuxd >/dev/null 2>&1
-	logger -t homematic -p user.info "started cux-daemon"
+	logger -t cuxd -p user.info "started cux-daemon"
 	;;
 
   info)
-  	VER=`/usr/local/addons/cuxd/cuxd -v`
+  	VER=`$CUXDIR/cuxd -v`
 	echo "Info: <center><b>CUx-Daemon $VER</b><br><img src="../addons/cuxd/CUXD.PNG"></center>"
 	echo "Name: CUx-Daemon"
 	echo "Version: $VER"
@@ -61,7 +61,7 @@ case "$1" in
 	;;
 
   uninstall)
-	logger -t homematic -p user.info "removing cux-daemon"
+	logger -t cuxd -p user.info "removing cux-daemon"
 	killall -KILL cuxd >/dev/null 2>&1 || true
 	$CUXDIR/update_addon cuxd
 	rm /usr/local/etc/config/addons/www/cuxd

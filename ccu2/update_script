@@ -26,6 +26,12 @@ rm -f $ADDON_DIR/cuxd.dbg
 # enable debugging after installation "LOGLEVEL LOGFILE"
 #echo "10 /tmp/cuxddbglog.txt" >$ADDON_DIR/cuxd.dbg
 
+# remove libraries
+rm -f $ADDON_DIR/lib*.so*
+
+# remove modules dir
+rm -rf $ADDON_DIR/modules
+
 # remove link to website
 rm -f $CONFIG_DIR/addons/www/cuxd
 

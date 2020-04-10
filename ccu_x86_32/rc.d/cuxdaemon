@@ -31,7 +31,7 @@ Start () {
       modprobe ehci_hcd 2>/dev/null
       chmod 0755 $CUXDIR/cuxd
       $CUXDIR/cuxd >/dev/null 2>&1
-      logger -t homematic -p user.info "started cux-daemon"
+      logger -t cuxd -p user.info "started cux-daemon"
     fi
     echo "OK"
 }
@@ -48,7 +48,7 @@ Stop () {
         sleep 10
         kill -KILL $PSPID 2>/dev/null
       fi
-      logger -t homematic -p user.info "stopped cux-daemon"
+      logger -t cuxd -p user.info "stopped cux-daemon"
     fi
     echo "OK"
 }
@@ -72,7 +72,7 @@ case "$1" in
       echo -n "Starting CUxD: "
       chmod 0755 $CUXDIR/cuxd
       $CUXDIR/cuxd >/dev/null 2>&1
-      logger -t homematic -p user.info "started (restart) cux-daemon"
+      logger -t cuxd -p user.info "started (restart) cux-daemon"
       echo "OK"
     fi
   ;;
@@ -91,7 +91,7 @@ case "$1" in
   ;;
 
   uninstall)
-    logger -t homematic -p user.info "removing cux-daemon"
+    logger -t cuxd -p user.info "removing cux-daemon"
     killall -KILL cuxd >/dev/null 2>&1 || true
     if [ -d $CUXDIR ]
     then

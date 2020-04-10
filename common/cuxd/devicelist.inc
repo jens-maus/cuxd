@@ -30,6 +30,7 @@ HM-PB-4-WM          PushButton-4ch-wm_thumb     Wandtaster 4 Kanal
 HM-PB-6-WM55        86_hm-pb-6-wm55_thumb       Wandtaster 6 Kanal
 HM-RC-P1            21_hm-rc-p1_thumb           Handsender 1 Taste
 HM-RC-4             18_hm-rc-4_thumb            Handsender 4 Tasten
+HM-RC-8             100_hm-rc-8_thumb           Handsender 8 Tasten
 HM-RC-12            19_hm-rc-12_thumb           Fernbedienung 12 Tasten
 HM-RC-19            20_hm-rc-19_thumb           Fernbedienung 19 Tasten
 
@@ -43,8 +44,10 @@ HM-LC-Sw1-SM        8_hm-lc-sw1-sm_thumb        Schaltaktor 1fach Aufputz
 HM-LC-Sw4-SM        3_hm-lc-sw4-sm_thumb        Schaltaktor 4fach Aufputz
 HM-LC-Sw2-DR        69_hm-lc-sw2-dr_thumb       Schaltaktor 2fach Hutschiene
 HM-LC-Sw4-DR        68_hm-lc-sw4-dr_thumb       Schaltaktor 4fach Hutschiene
+HmIPW-DRS8          161_hmipw-drs8_thumb        Schaltaktor 8fach (WR)
 HM-LC-Sw1-Ba-PCB    77_hm-lc-sw1-ba-pcb_thumb   Schaltaktor 1fach Platine
 HM-LC-Sw4-PCB       46_hm-lc-sw4-pcb_thumb      Schaltaktor 4fach Platine
+HmIP-MOD-OC8        156_hmip-mod-oc8_thumb      Schaltaktor 8fach Platine
 HM-LC-Sw1-Pl        OM55_DimmerSwitch_thumb     Zwischenstecker Schalter
 HM-LC-Sw1PBU-FM     PushButton-2ch-wm_thumb     Schaltaktor 1-fach Schalter
 HM-ES-PMSw1-Pl      93_hm-es-pmsw1-pl_thumb     Schaltaktor mit Leistungsmessung
@@ -53,13 +56,16 @@ HM-LC-Bl1-FM        7_hm-lc-bl1-fm_thumb        Jalousieaktor 1fach Unterputz
 HM-LC-Bl1-SM        6_hm-lc-bl1-sm_thumb        Jalousieaktor 1fach Aufputz
 HM-LC-Bl1PBU-FM     PushButton-2ch-wm_thumb     Jalousieaktor 1fach Schalter
 HM-LC-Ja1PBU-FM     PushButton-2ch-wm_thumb     Jalousieaktor mit Lamellen
+HmIPW-DRBL4         163_hmipw-drbl4_thumb       Jalousieaktor 4fach (WR)
 
 HM-LC-Dim1T-FM      65_hm-lc-dim1t-fm_thumb     Dimmaktor 1fach Unterputz
 HM-LC-Dim2L-SM      45_hm-lc-dim2l-sm_thumb     Dimmaktor 2fach Aufputz
+HmIPW-DRD3          166_hmipw-drd3_thumb        Dimmaktor 3fach Hutschiene (WR)
 HM-LC-Dim1L-CV      2_hm-lc-dim1l-cv_thumb      Zwischendecken Dimmer
 HM-LC-Dim1L-Pl      OM55_DimmerSwitch_thumb     Zwischenstecker Dimmer
 HM-LC-Dim1TPBU-FM   PushButton-2ch-wm_thumb     Dimmaktor 1fach Schalter
 
+#HM-LC-RGBW-WM       111_hm-lc-rgbw-wm_thumb     RGBW-Controller
 HM-OU-CF-Pl         60_hm-ou-cf-pl_thumb        Signalgeber/Gong
 HM-EM-CMM           25_hm-em-cmm_thumb          Z&auml;hlersensor Management
 HM-EM-CCM           44_hm-em-ccm_thumb          Z&auml;hlersensor Kamera
@@ -67,3 +73,12 @@ HM-OU-LED16         78_hm-ou-led16_thumb        Statusanzeige 16 Kanal
 HM-Sec-SD           51_hm-sec-sd_thumb          Rauchmelder
 HM-Sec-SD-Team      52_hm-sec-sd-team_thumb     Rauchmelder (Gruppe)
 HM-Sec-Key          14_hm-sec-key_thumb         KeyMatic
+
+VIR-LG-ONOFF       coupling/hm-coupling-onoff     virtueller Schalter
+VIR-LG-DIM         coupling/hm-coupling-dim       virtueller Dimmer
+VIR-LG-WHITE       coupling/hm-coupling-white     virtuell WHITE
+VIR-LG-RGB         coupling/hm-coupling-rgb       virtuell RGB
+VIR-LG-RGBW        coupling/hm-coupling-rgbw      virtuell RGBW
+VIR-LG-WHITE-DIM   coupling/hm-coupling-white-dim virtueller Dimmer + WHITE
+VIR-LG-RGB-DIM     coupling/hm-coupling-rgb-dim   virtueller Dimmer + RGB
+VIR-LG-RGBW-DIM    coupling/hm-coupling-rgbw-dim  virtueller Dimmer + RGBW

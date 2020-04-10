@@ -67,6 +67,8 @@ CUxD-Ger&auml;te verwalten
 <option value='235'>(35) [4BS] Sensoren</option>
 <option value='236'>(36) Aktoren</option>
 <option value='237'>(37) BiDi Aktoren</option>
+<option value='200' style='background-color:#E0E0FF'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- DALI -----</option>
+<option value='239'>(39) DALI Aktoren</option>
 <option value='200' style='background-color:#E0E0FF'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- wireless M-Bus -----</option>
 <option value='225'>(25) wM-Bus Sensoren</option>
 <option value='200' style='background-color:#E0E0FF'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- Moehlenhoff -----</option>
@@ -324,7 +326,7 @@ Seriennummer:&nbsp;<input type='text' name='dserial' maxlength='5' size='5' valu
 |
 </td><td><img src='%s?sid=<!SID!>&m=%d' name='pictures' border='0'>
 </td></tr></table><br><br style='font-size:16px'>
-<input type='submit' value='Ger&auml;t auf CCU erzeugen !' style='width:180px;font-family:arial;font-size:12px;' onclick='return confirm_device(form.dtype,form.dtype2);'/>
+<input type='submit' value='Ger&auml;t auf CCU erzeugen !' style='width:180px;font-family:arial;font-size:12px;' onclick='return confirm_device(form);'/>
 </form>
 |
 ##15
@@ -400,6 +402,16 @@ function submit_dtype2(obj) {
   f.dtype2.value=obj.options[obj.selectedIndex].value;
   f.submit(true);
 }
+
+function set_Device(form,id) {
+  if (id) {
+    form.dbase.disabled=true;
+    form.dbase.value=id;
+    showimage();
+  } else {
+    form.dbase.disabled=false;
+  }
+}
 //--></script>
 <div style='font-family:arial;font-size:13px;' align='left'>
 <form name='dtype' method='post' action='%s?sid=<!SID!>&m=3' target='dstatus'>
@@ -439,14 +451,18 @@ function showimage() {
     document.images.pictures.src='%s?sid=<!SID!>&m='+document.dtype.dbase.options[document.dtype.dbase.selectedIndex].value;
   }
 }
-function confirm_device(dtype,dtype2) {
-  if (dtype && dtype2 && dtype.value && dtype2.value) {
-    if ((dtype.value == 37) && (dtype2.value == 0)) {
-      var msg = "*** ACHTUNG ***\n\n";
-      msg += "Bei PEHA-Schaltaktoren mit Tastenwippe und Geraetefirmware < 2.27 ist die Wippe nach dem Anlernen dauerhaft gesperrt.\n";
-      msg += "Dieses Problem laesst sich danach nur durch Einsenden des Aktors zum Hersteller beheben!";
-      return confirm(msg);
+function confirm_device(form) {
+  if (form) {
+    if (form.dtype && form.dtype2 && form.dtype.value && form.dtype2.value) {
+      if ((form.dtype.value == 37) && (form.dtype2.value == 0)) {
+        var msg = "*** ACHTUNG ***\n\n";
+        msg += "Bei PEHA-Schaltaktoren mit Tastenwippe und Geraetefirmware < 2.27 ist die Wippe nach dem Anlernen dauerhaft gesperrt.\n";
+        msg += "Dieses Problem laesst sich danach nur durch Einsenden des Aktors zum Hersteller beheben!";
+        return confirm(msg);
+      }
     }
+    if (form.dbase) form.dbase.disabled=false;
+    else return false;
   }
   return true;
 }
@@ -763,11 +779,12 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 |
 ##55
 |
-<br><br>Control:&nbsp;<select name='dcontrol' size='1'>
+<br><br>Control:&nbsp;<select name='dcontrol' size='1' onChange='if (this.value==4) { set_Device(this.form,%d) } else { set_Device(this.form,0) }'>
 <option value='0'>Taster</option>
 <option value='1'>Schalter</option>
 <option value='2'>Jalousie</option>
 <option value='3'>Dimmer</option>
+<option value='4'>Dimmer+RGB+WHITE</option>
 </select>
 |
 ##56
@@ -911,5 +928,6 @@ Refresh:<input type='text' size='2' maxlength='3' name='i' value='%d'/>s
 Ger&auml;t:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='0'$selected$>1. Schalter</option>
 <option value='1'$selected$>2. Dimmer</option>
+<option value='2'$selected$>3. Szenentaster</option>
 </select><br><br>
 |
