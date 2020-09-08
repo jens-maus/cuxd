@@ -2,7 +2,7 @@
 CUXDIR=/usr/local/addons/cuxd
 CONFIG_URL=/addons/cuxd/index.ccc
 PIDFILE=/var/run/cuxd.pid
-export LD_LIBRARY_PATH=$CUXDIR
+export LD_LIBRARY_PATH=$CUXDIR:$LD_LIBRARY_PATH
 export CURL_CA_BUNDLE=$CUXDIR/extra/cacert.pem
 
 case "$1" in

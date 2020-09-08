@@ -6,7 +6,7 @@ STARTRC=/etc/init.d/S55cuxd
 STARTINIT=/etc/init.d/S55InitAddons
 PSPID=`ps -o pid,comm | awk '{if($2=="cuxd"){print $1}}'`
 export TZ=`cat /etc/config/TZ`
-export LD_LIBRARY_PATH=$CUXDIR
+export LD_LIBRARY_PATH=$CUXDIR:$LD_LIBRARY_PATH
 
 Start () {
     echo -n "Starting CUxD: "
