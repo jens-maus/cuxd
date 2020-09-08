@@ -45,7 +45,7 @@ if {$result == "</dom>"} {
 }
 cd /
 puts "creating archive..."
-exec tar czf /tmp/usr_local.tar.gz usr/local --exclude-tag=.nobackup
+exec tar czf /tmp/usr_local.tar.gz --exclude-tag=.nobackup usr/local
 cd /tmp/
 puts "sign configuration with current key..."
 exec crypttool -s -t 1 <usr_local.tar.gz >signature
