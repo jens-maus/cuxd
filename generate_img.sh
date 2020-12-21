@@ -29,5 +29,5 @@ else
   generate_pkg ccu1
   generate_pkg ccu2
   generate_pkg ccu3
-  generate_pkg ccu_x86_32
+  generate_pkg ccux86
 fi

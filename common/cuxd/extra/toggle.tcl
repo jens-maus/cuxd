@@ -1,12 +1,14 @@
 #!/bin/tclsh
 #
-# Version 1.0 * (C) '2017 by Uwe Langhammer
+# Version 1.1 * (C) '2020 by Uwe Langhammer
 # script to toggle switches/dimmer
 #
 # usage: toggle.tcl [-v] [-ms] <interface.address:ch.DP> [<LEVEL>] [<RAMPTIME0>] [<RAMPTIME1>] [<ONTIME>]
 #
 
 load tclrega.so
+
+set state_file "/var/cache/cuxd/state_"
 
 proc getopt {_argv name {_var ""}} {
   upvar 1 $_argv argv $_var var
@@ -26,7 +28,7 @@ set verbose [getopt argv -v]
 set ms [getopt argv -ms]
 
 if { $argc < 1 } {
-  puts "USAGE: toggle.tcl \[-v\] \[-ms\] <interface.address:ch.DP> \[<LEVEL>\] \[<RAMPTIME0>\] \[<RAMPTIME0>\] \[<ONTIME>\]"
+  puts "USAGE: toggle.tcl \[-v\] \[-ms\] <interface.address:ch.DP> \[<LEVEL>\] \[<RAMPTIME0>\] \[<RAMPTIME1>\] \[<ONTIME>\]"
   exit 1
 }
 
@@ -52,7 +54,21 @@ if { 1 } {
   }
   regsub -- {\.[^\.]+$} $address "" addr
 
-  append cmd "if (dom.GetObject(\"$address\").Value()) \{"
+  append cmd "var ret;"
+
+  append state_file $address
+  if { [ file exists $state_file ] && ([ expr [ clock seconds ] - [ file mtime $state_file ] ] < 4) } {
+    set fp [ open $state_file "r" ]
+    gets $fp data
+    close $fp
+    if { $data } {
+      append cmd "if (true) \{"
+    } else {
+      append cmd "if (false) \{"
+    }
+  } else {
+    append cmd "if (dom.GetObject(\"$address\").Value()) \{"
+  }
 
   if {[string is double $set_ramptime0] && ($set_ramptime0 > 0)} {
     if { $ms } { set set_ramptime0 [expr $set_ramptime0 / 1000.0] }
@@ -61,6 +77,7 @@ if { 1 } {
   }
 
   append cmd "dom.GetObject(\"$address\").State(0);"
+  append cmd "ret = 0;"
   append cmd "\} else \{"
 
   if {[string is double $set_ramptime1] && ($set_ramptime1 > 0)} {
@@ -84,17 +101,19 @@ if { 1 } {
   } else {
     append cmd "dom.GetObject(\"$address\").State(1);"
   }
+  append cmd "ret = 1;"
   append cmd "\}"
 
   if { $verbose } { puts $cmd }
 
-  set cmd [concat "if (dom.GetObject(\"$address\")) {" $cmd]
-  append cmd "var ret = 1;}"
-
   array set values [rega_script $cmd]
 
-  if { [info exists values(ret)] && ($values(ret) == 1) } {
+  if { [info exists values(ret)] && ( $values(ret) != "null" ) } {
     puts "OK"
+#    puts $values(ret)
+    set fp [ open $state_file "w" ]
+    puts -nonewline $fp $values(ret)
+    close $fp
     exit 0
   } else {
     puts "ERROR"

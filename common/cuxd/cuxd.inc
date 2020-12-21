@@ -56,9 +56,9 @@ CUxD-Ger&auml;te verwalten
 <div style='border:0px;font-family:arial;font-size:11px;background-color:#ffffee'>
 <table border='0' style='background-color:#FFFFEE;' width='100%%' height='95%%' cellpadding='0' cellspacing='0'>
 <tr>
-<td id='left_table' style='width:50%%; height:100%%; padding:16px'>
+<td id='left_table' style='vertical-align:top; width:50%%; height:100%%; padding:0 20px 0 20px'>
 <form id='dtype' name='dtype' method='get' action='%s' target='doptions' style='border:0px;font-family:arial;font-size:13px;white-space:nowrap'>
-<b>CUxD&nbsp;Ger&auml;tetyp:</b>&nbsp;\
+<br><br><b>CUxD&nbsp;Ger&auml;tetyp:</b>&nbsp;\
 <input type='hidden' name='sid' value='<!SID!>'/>
 <select name='m' size='1' style='width:50%%;' onChange='dtype2.value=0;dtype.submit();'>
 <option value='200' style='background-color:#E0E0FF'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- EnOcean -----</option>
@@ -66,7 +66,7 @@ CUxD-Ger&auml;te verwalten
 <option value='234'>(34) [1BS] T&uuml;r-/Fensterkontakt</option>
 <option value='235'>(35) [4BS] Sensoren</option>
 <option value='236'>(36) Aktoren</option>
-<option value='237'>(37) BiDi Aktoren</option>
+<option value='237'>(37) [VLD] D2-Aktoren/Sensoren</option>
 <option value='200' style='background-color:#E0E0FF'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- DALI -----</option>
 <option value='239'>(39) DALI Aktoren</option>
 <option value='200' style='background-color:#E0E0FF'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- wireless M-Bus -----</option>
@@ -325,7 +325,7 @@ Seriennummer:&nbsp;<input type='text' name='dserial' maxlength='5' size='5' valu
 ##14
 |
 </td><td><img src='%s?sid=<!SID!>&m=%d' name='pictures' border='0'>
-</td></tr></table><br><br style='font-size:16px'>
+</td></tr></table><br><br style='font-size:20px'>
 <input type='submit' value='Ger&auml;t auf CCU erzeugen !' style='width:180px;font-family:arial;font-size:12px;' onclick='return confirm_device(form);'/>
 </form>
 |
@@ -549,7 +549,7 @@ foreach (c,root.Channels().EnumUsedIDs()){
 ##31
 |
 </span><br><br style='font-size:16px'><form name='dlist' method='post' action='%s?sid=<!SID!>&m=4' target='dstatus'> 
-<select name='dselect' size='20' style='width:100%%;font-family:courier new;font-size:12px;'>
+<select name='dselect' size='19' style='width:100%%;font-family:courier new;font-size:12px;'>
 |
 ##32
 |
@@ -742,9 +742,9 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 ##51
 |
 Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
-<option value='0'$selected$>1. Schaltaktor (1-4 Kanal)</option>
-<option value='1'$selected$>2. Dimmaktor (1-4 Kanal)</option>
-<option value='2'$selected$>3. Jalousieaktor (1-4 Kanal)</option>
+<option value='0'$selected$>1. Schaltaktor (1-8 Kanal)</option>
+<option value='1'$selected$>2. Dimmaktor (1-8 Kanal)</option>
+<option value='2'$selected$>3. Jalousieaktor (1-8 Kanal)</option>
 <option value='3'$selected$>4. IntesisBox</option>
 <option value='4'$selected$>5. MD15 Ventilantrieb</option>
 <option value='5'$selected$>6. Eltako FMP3 (16-Kanal)</option>
@@ -754,10 +754,12 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 |
 Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='0'$selected$>1. Schaltaktor (1-Kanal)</option>
-<option value='1'$selected$>2. SODA Funk-Alarmgriff</option>
-<option value='2'$selected$>3. Omnio AWAG Schaltaktoren</option>
-<option value='3'$selected$>4. Omnio AWAG Dimmer</option>
-<option value='4'$selected$>5. Omnio AWAG Jalousieaktoren</option>
+<option value='1'$selected$>2. SODA Funk-Alarmgriff (D2-06-01)</option>
+<option value='2'$selected$>3. VLD Schaltaktor (1-8 Kanal) (D2-01-xx)</option>
+<option value='3'$selected$>4. VLD Dimmer (1-8 Kanal) (D2-01-xx)</option>
+<option value='4'$selected$>5. VLD Jalousieaktor (1-4 Kanal) (D2-05-0x)</option>
+<option value='5'$selected$>6. Multisensor (D2-14-41)</option>
+<option value='6'$selected$>7. NodOn SoftButton (D2-03-0A)</option>
 </select><br><br>
 |
 ##53
@@ -929,5 +931,6 @@ Ger&auml;t:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='0'$selected$>1. Schalter</option>
 <option value='1'$selected$>2. Dimmer</option>
 <option value='2'$selected$>3. Szenentaster</option>
+<option value='3'$selected$>4. DT8 Dimmer+RGB</option>
 </select><br><br>
 |
