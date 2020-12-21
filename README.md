@@ -3,8 +3,7 @@
 [![Release](https://img.shields.io/github/release/jens-maus/cuxd.svg)](https://github.com/jens-maus/cuxd/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/jens-maus/cuxd/latest/total.svg)](https://github.com/jens-maus/cuxd/releases/latest)
 [![Issues](https://img.shields.io/github/issues/jens-maus/cuxd.svg)](https://github.com/jens-maus/cuxd/issues)
-[![Build Status](https://travis-ci.org/jens-maus/cuxd.svg?branch=master)](https://travis-ci.org/jens-maus/cuxd)
-[![Code Climate](https://codeclimate.com/github/jens-maus/cuxd/badges/gpa.svg)](https://codeclimate.com/github/jens-maus/cuxd)
+[![Build](https://github.com/jens-maus/cuxd/workflows/CI/badge.svg)](https://github.com/jens-maus/cuxd/actions)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PRZ6MMMLY44RE)
 
@@ -13,8 +12,9 @@ This repository hosts the CCU-Addon build environment for the CUx-Daemon (CUxD) 
 ## Supported CCU Devices
 
 An installation of the CUxD Addon is currently supported on the following CCU devices:
-* HomeMatic CCU3 / RaspberryMatic
-* HomeMatic CCU2 / YAHM / LXCCU
+* RaspberryMatic (arm, x86)
+* HomeMatic CCU3 / piVCCU3
+* HomeMatic CCU2 / YAHM / LXCCU / piVCCU2
 * HomeMatic CCU1
 
 ## Installation

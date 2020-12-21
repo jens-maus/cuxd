@@ -1,4 +1,0 @@
-dist: trusty
-language: c
-
-script: ./generate_img.sh
