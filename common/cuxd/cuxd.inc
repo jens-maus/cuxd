@@ -731,6 +731,7 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='7'$selected$>8. Multifunktions-Sensor (A5-14-xx)</option>
 <option value='8'$selected$>9. Drehtaster (A5-38-08)</option>
 <option value='9'$selected$>10. Zaehlersensor (A5-12-0x)</option>
+<option value='10'$selected$>11. Gas-Sensor (A5-09-0x)</option>
 </select><br><br>
 |
 ##50

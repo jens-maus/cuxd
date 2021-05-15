@@ -21,6 +21,7 @@ HM-CC-VG-1          95_group_hm-cc-vg-1_thumb   Heizungsthermostat (Gruppe)
 HM-Sec-SC           16_hm-sec-sc_thumb          T&uuml;rsensor
 HM-Sec-RHS          17_hm-sec-rhs_thumb         Fenster-/ Drehgriffkontakt
 HM-Sen-EP           48_hm-sen-ep_thumb          Impulssensor
+HM-ES-TX-WM         102_hm-es-tx-wm_thumb       Energiezaehler
 HM-Sec-WDS          49_hm-sec-wds_thumb         Wassermelder
 HM-Sen-RD-O         87_hm-sen-rd-o_thumb        Regensensor
 HM-Sen-LI-O         126_hm-sen-li-o_thumb       Lichtsensor
