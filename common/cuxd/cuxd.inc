@@ -934,3 +934,29 @@ Ger&auml;t:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='3'$selected$>4. DT8 Dimmer+RGB</option>
 </select><br><br>
 |
+##72
+|
+string id;
+foreach (id,dom.GetObject(ID_DEVICES).EnumUsedIDs()) {
+  var d1 = dom.GetObject(id);
+  var i1 = dom.GetObject(d1.Interface());
+  if (i1.Name() == "CUxD") {
+    string c;
+    foreach(c,d1.Channels().EnumUsedIDs()) {
+      var c1 = dom.GetObject(c);
+      var dp = c1.DPByControl("RGBW_COLOR.RGBW");
+      if (dp) {
+        Write('check '#i1.Name() # '.' # c1.Address());
+        if (dp.MetaData("DEFAULT")) {
+          WriteLine(" - DEFAULT exists!");
+        } else {
+          dp.RemoveMetaData("DEFAULT");
+          dp.AddMetaData("DEFAULT","rgb(255,255,255,255)");
+          WriteLine(" - DEFAULT added!");
+        }
+      }
+    }
+  }
+}
+id="DONE";
+|

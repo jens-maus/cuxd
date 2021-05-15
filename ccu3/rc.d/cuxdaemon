@@ -108,14 +108,21 @@ case "$1" in
   uninstall)
     logger -t cuxd -p user.info "removing cux-daemon"
     killall -KILL cuxd >/dev/null 2>&1 || true
+    /bin/sed -i '/<ipc>/{:a;N;/<\/ipc>/!ba };/<name>CUxD<\/name>/d' /etc/config/InterfacesList.xml
+    cat <<-ENDOFTCL >/tmp/remove_cuxd.$$.tcl
+load tclrega.so
+array set values [rega_script "var o = dom.GetObject('CUxD');if (o) {WriteLine('remove '#o.ID()#' '#o.Name());dom.GetObject(ID_INTERFACES).Remove(o);dom.DeleteObject(o);system.Save();} WriteLine('rega script finished!');"]
+puts -nonewline \$values(STDOUT)
+ENDOFTCL
+    tclsh /tmp/remove_cuxd.$$.tcl
+    rm /tmp/remove_cuxd.$$.tcl
     if [ -d $CUXDIR ]
     then
       $CUXDIR/update_addon cuxd
-      $CUXDIR/extra/ctl_startup 2 rfd HMServer ReGaHss
+      $CUXDIR/extra/ctl_startup 1 0 rfd HMServer ReGaHss
       rm $CONFIG_DIR/addons/www/cuxd
       rm -rf $CUXDIR
     fi
-    cp -f /etc/config_templates/InterfacesList.xml $CONFIG_DIR/InterfacesList.xml
     if [ -h $STARTRC ]
     then
       mount -o remount,rw /
