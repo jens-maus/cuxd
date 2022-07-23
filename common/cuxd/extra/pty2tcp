@@ -1,14 +1,76 @@
 #!/bin/sh
 #
-# (C) '2015 by Uwe Langhammer
+# (C) '2015,2021 by Uwe Langhammer
 # creates and deletes a pseudo TTY mapped to a TCP port for CUxD
 #
 # usage:
-#   pty2tcp start ttyTCP<x> <ip>:<port> [<options>]
+#   pty2tcp start ttyTCP<x> [-ssl] <ip>:<port> [<options>]
 #   pty2tcp stop ttyTCP<x>
 #
 
 SOCATP=/usr/local/addons/cuxd/extra/socat
+
+kill_pid() {
+  echo "kill ($1)"
+logger -p daemon.info -t cuxd.pty2tcp "kill -HUP ($1)"
+  kill -HUP $1
+  sleep 1
+  kill -0 $1 2>/dev/null
+  if [ $? -eq 0 ]
+  then
+logger -p daemon.info -t cuxd.pty2tcp "kill -TERM ($1)"
+    kill -TERM $1
+    sleep 1
+    kill -0 $1 2>/dev/null
+    if [ $? -eq 0 ]
+    then
+logger -p daemon.info -t cuxd.pty2tcp "kill -KILL ($1)"
+      kill -KILL $1
+      sleep 1
+    fi
+  fi
+}
+
+check_device() {
+#logger -p daemon.info -t cuxd.pty2tcp "check_device start $1 $2 $3"
+while [ -f $2 ]
+do
+  pid=`cat $2 2>/dev/null`
+  if [ "$1" = "$pid" ]
+  then
+    if [ ! -e $3 ]
+    then
+      sleep 10
+      if [ ! -e $3 ]
+      then
+logger -p daemon.err -t cuxd.pty2tcp "$3 not found"
+        kill_pid $1
+      fi
+    else
+      sleep 2
+    fi
+  else
+    break
+  fi
+done
+#logger -p daemon.info -t cuxd.pty2tcp "check_device done $1 $2 $3"
+}
+
+SSL=0
+for arg do
+  shift
+  if [ `echo "$arg" | grep "-"` ]
+  then
+    if [ "$arg" = "-ssl" ]
+    then
+      SSL=1
+    fi
+    continue
+  fi
+  set -- "$@" "$arg"
+done
+
+#logger -p daemon.info -t cuxd.pty2tcp $*
 
 if [ \( -n "$1" \) -a \( -n "$2" \) ]
 then
@@ -37,18 +99,27 @@ then
       then
         if [ $pid -ne 0 ]
         then
-          echo "kill ($pid)"
           rm -f $pidfile
-          kill -TERM $pid
-          sleep 1
+          kill_pid $pid
         fi
         echo -n "starting"
         echo $$ >$pidfile
         ( while [ -f $pidfile ]
           do
-            $SOCATP pty,link=/dev/$2,wait-slave tcp:$3,forever,$4 &
-            echo $! >$pidfile
-            wait
+            if [ $SSL -ne 0 ]
+            then
+              $SOCATP pty,link=/dev/$2,wait-slave openssl-connect:$3,forever,$4 &
+            else
+              $SOCATP pty,link=/dev/$2,wait-slave tcp:$3,forever,$4 &
+            fi
+            pid=$!
+            echo $pid >$pidfile
+logger -p daemon.info -t cuxd.pty2tcp "start ($pid) $pidfile"
+            check_device $pid $pidfile /dev/$2 &
+            pid2=$!
+            wait %1
+#logger -p daemon.info -t cuxd.pty2tcp "kill check_device($pid2)"
+            kill -KILL $pid2
           done
         )&
         echo " ok"
@@ -57,14 +128,12 @@ then
     stop)
       if [ $pid -ne 0 ]                                                                             
       then                                                                                          
-        echo "kill ($pid)"                                                                                  
         rm -f $pidfile
-        kill -TERM $pid
-        sleep 1
+        kill_pid $pid
       fi                                                                                            
     ;;
   esac
 else
-  echo "usage: $0 (start|stop) ttyTCP<x> <ip>:<port>" 
+  echo "usage: $0 (start|stop) ttyTCP<x> [-ssl] <ip>:<port>" 
 fi
 

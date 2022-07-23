@@ -26,6 +26,13 @@ Start () {
         ln -sf $CONFIG_DIR/rc.d/cuxdaemon $STARTRC
       fi
     fi
+    if [ -f /usr/bin/jq ]
+    then
+      if [ ! -h $CUXDIR/extra/jq ]
+      then
+        ln -sf /usr/bin/jq $CUXDIR/extra/jq
+      fi
+    fi
     if [ "$PSPID" = "" ]
     then
       modprobe ehci_hcd 2>/dev/null

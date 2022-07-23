@@ -3,7 +3,7 @@
 <html>
 <head>
 |<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>HomeMatic CUxD</title>
+<title>%s</title>
 </head>
 <body style='background-color:#ffffee;margin-bottom:0px; margin-top:5px;'> 
 <style type='text/css'>
@@ -61,6 +61,8 @@ CUxD-Ger&auml;te verwalten
 <br><br><b>CUxD&nbsp;Ger&auml;tetyp:</b>&nbsp;\
 <input type='hidden' name='sid' value='<!SID!>'/>
 <select name='m' size='1' style='width:50%%;' onChange='dtype2.value=0;dtype.submit();'>
+<option value='200' style='background-color:#E0E0FF'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- KLF200 -----</option>
+<option value='219'>(19) KLF200 Geräte</option>
 <option value='200' style='background-color:#E0E0FF'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- EnOcean -----</option>
 <option value='233'>(33) [RPS] Taster und Drehgriffkontakt</option>
 <option value='234'>(34) [1BS] T&uuml;r-/Fensterkontakt</option>
@@ -107,8 +109,8 @@ CUxD-Ger&auml;te verwalten
 <option value='240'>(40) 16 Kanal Universalsteuerung</option>
 <option value='291'>(91) CloudMatic ...</option>
 |<option value='241'>(41) Ping / Alive 16fach</option>
-<option value='200' style='background-color:#FFC0C0'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- Experimental -----</option>
-<option value='230' style='background-color:#FFE0E0'>(30) Wetter Thermo/Hygro/Baro</option>
+|<option value='200' style='background-color:#FFC0C0'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----- Experimental -----</option>
+|<option value='230' style='background-color:#FFE0E0'>(30) Wetter Thermo/Hygro/Baro</option>
 <!-- <option value='299' style='background-color:#FFE0E0'>(99) email-SMTP/IMAP Device</option> -->
 </select>
 <input type='hidden' name='dtype2' value='0'/>
@@ -403,9 +405,9 @@ function submit_dtype2(obj) {
   f.submit(true);
 }
 
-function set_Device(form,id) {
+function set_Device(form,id,disableflag) {
   if (id) {
-    form.dbase.disabled=true;
+    form.dbase.disabled=disableflag;
     form.dbase.value=id;
     showimage();
   } else {
@@ -761,6 +763,7 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='4'$selected$>5. VLD Jalousieaktor (1-4 Kanal) (D2-05-0x)</option>
 <option value='5'$selected$>6. Multisensor (D2-14-41)</option>
 <option value='6'$selected$>7. NodOn SoftButton (D2-03-0A)</option>
+<option value='7'$selected$>8. REHAU SmartGuard (D2-06-11)</option>
 </select><br><br>
 |
 ##53
@@ -782,12 +785,13 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 |
 ##55
 |
-<br><br>Control:&nbsp;<select name='dcontrol' size='1' onChange='if (this.value==4) { set_Device(this.form,%d) } else { set_Device(this.form,0) }'>
+<br><br>Control:&nbsp;<select name='dcontrol' size='1' onChange='arr = [%s];set_Device(this.form,arr[this.value],(this.value==4) ? true : false);''>
 <option value='0'>Taster</option>
 <option value='1'>Schalter</option>
 <option value='2'>Jalousie</option>
 <option value='3'>Dimmer</option>
 <option value='4'>Dimmer+RGB+WHITE</option>
+<option value='5'>Fensteröffner</option>
 </select>
 |
 ##56
@@ -814,7 +818,7 @@ Period:<input type="text" name="period" size="3" value="168"/>\
 |
 ##58
 |
-<br><br>Control:&nbsp;<select name='dcontrol' size='1'>
+<br><br>Control:&nbsp;<select name='dcontrol' size='1' onChange='arr = [%s];set_Device(this.form,arr[this.value],false);''>
 <option value='0'>Taster</option>
 <option value='1'>Schalter</option>
 <option value='2'>T&uuml;r-/Fensterkontakt</option>
@@ -870,6 +874,7 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <div style='font-family:arial;position:absolute;'>
 <div id='process' style='position:absolute;left:0px;top:0px;height:100%;width:100%;opacity:0.7;z-index:-1'></div>
 <form onSubmit="var docstyle=document.getElementById('process').style;docstyle.zIndex=99;docstyle.background='#fff url(ajax.gif) no-repeat center';return true;">
+<input type='hidden' name='sid' value='<!SID!>'/>
 |
 ##65
 |
@@ -960,4 +965,14 @@ foreach (id,dom.GetObject(ID_DEVICES).EnumUsedIDs()) {
   }
 }
 id="DONE";
+|
+##73
+|
+Ger&auml;t:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
+<option value='0'$selected$>1. Szenentaster</option>
+<option value='1'$selected$>2. Rolladen</option>
+<option value='2'$selected$>3. Fensteröffner</option>
+<option value='3'$selected$>4. Schalter</option>
+<option value='4'$selected$>5. Dimmer</option>
+</select><br><br>
 |
