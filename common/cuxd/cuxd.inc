@@ -285,7 +285,7 @@ Sende/Empfangs-Terminal
 </td>
 <td width='20%%' align='right'>
 <form name='termform' id='termform' style='margin:0;padding:0;' method='get' action='' target='cuxdoutput'>
-<input type='button' value='Open' style='width:70px;font-family:arial;font-size:12px;' onClick='window.open("?a=All&sid=<!SID!>&m=23")'/>
+<input type='button' value='Open' style='width:70px;font-family:arial;font-size:12px;' onClick='window.open("?a=All&sid=<!SID!>&m=24")'/>
 </form>
 </td>
 </tr>
@@ -702,6 +702,7 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='1'$selected$>Exec</option>
 <option value='2'$selected$>Multi-DIM-Exec</option>
 <option value='3'$selected$>Ping/Alive</option>
+<option value='4'$selected$>ES-PMSw1</option>
 </select><br><br>
 |
 ##47
@@ -747,7 +748,7 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='0'$selected$>1. Schaltaktor (1-8 Kanal)</option>
 <option value='1'$selected$>2. Dimmaktor (1-8 Kanal)</option>
-<option value='2'$selected$>3. Jalousieaktor (1-8 Kanal)</option>
+<option value='2'$selected$>3. Rolladenaktor (1-8 Kanal)</option>
 <option value='3'$selected$>4. IntesisBox</option>
 <option value='4'$selected$>5. MD15 Ventilantrieb</option>
 <option value='5'$selected$>6. Eltako FMP3 (16-Kanal)</option>
@@ -759,7 +760,7 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <option value='0'$selected$>1. Schaltaktor (1-Kanal)</option>
 <option value='1'$selected$>2. SODA Funk-Alarmgriff (D2-06-01)</option>
 <option value='2'$selected$>3. VLD Schaltaktor (1-8 Kanal) (D2-01-xx)</option>
-<option value='3'$selected$>4. VLD Dimmer (1-8 Kanal) (D2-01-xx)</option>
+<option value='3'$selected$>4. VLD Dimmer (1 Kanal) (D2-01-xx)</option>
 <option value='4'$selected$>5. VLD Jalousieaktor (1-4 Kanal) (D2-05-0x)</option>
 <option value='5'$selected$>6. Multisensor (D2-14-41)</option>
 <option value='6'$selected$>7. NodOn SoftButton (D2-03-0A)</option>
@@ -788,10 +789,11 @@ Funktion:&nbsp;<select name='dtype2' size='1' onChange='submit_dtype2(this)'>
 <br><br>Control:&nbsp;<select name='dcontrol' size='1' onChange='arr = [%s];set_Device(this.form,arr[this.value],(this.value==4) ? true : false);''>
 <option value='0'>Taster</option>
 <option value='1'>Schalter</option>
-<option value='2'>Jalousie</option>
+<option value='2'>Rolladen</option>
 <option value='3'>Dimmer</option>
 <option value='4'>Dimmer+RGB+WHITE</option>
 <option value='5'>Fensteröffner</option>
+<option value='6'>Jalousie</option>
 </select>
 |
 ##56
@@ -824,7 +826,7 @@ Period:<input type="text" name="period" size="3" value="168"/>\
 <option value='2'>T&uuml;r-/Fensterkontakt</option>
 <option value='3'>Bewegungsmelder</option>
 <option value='4'>Gefahrenmelder</option>
-<option value='5'>Jalousie</option>
+<option value='5'>Rolladen</option>
 <option value='6'>Dimmer</option>
 <option value='7'>Drehgriffkontakt</option>
 <option value='8'>KeyMatic</option>

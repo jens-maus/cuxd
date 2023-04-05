@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cuxd/cuxd -v 2>/dev/null;if [ "$?" -ne "0" ];then echo "wrong binary";exit 2;fi
+
 ADDON_DIR=/usr/local/addons/cuxd
 CONFIG_DIR=/usr/local/etc/config
 RCD_DIR=$CONFIG_DIR/rc.d

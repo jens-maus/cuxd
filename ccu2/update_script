@@ -1,15 +1,14 @@
 #!/bin/sh
 
+cuxd/cuxd -v 2>/dev/null;if [ "$?" -ne "0" ];then echo "wrong binary";exit 2;fi
+
 ADDON_DIR=/usr/local/addons/cuxd
 RCD_DIR=/usr/local/etc/config/rc.d
 CONFIG_DIR=/usr/local/etc/config
 STARTRC=/etc/init.d/S55cuxd
 STARTINIT=/etc/init.d/S55InitAddons
 
-if [ "$1" = "" ]
-then
-	exit 1
-fi
+if [ "$1" = "" ];then exit 2;fi
 
 mount /usr/local
 
